@@ -654,6 +654,19 @@
                 </div>
 
                 <div class="field">
+                    <label for="phone">Phone Number <span class="req">*</span></label>
+                    <input type="tel" id="phone" name="phone" placeholder="e.g. 98765 43210" autocomplete="tel"
+                        required>
+                </div>
+
+                <div class="field">
+                    <label for="email">Email Address <span class="req">*</span></label>
+                    <input type="text" id="email" name="email" placeholder="e.g. aisha@example.com" autocomplete="email"
+                        required>
+                    <p class="hint">We'll send event updates to this address</p>
+                </div>
+
+                <div class="field">
                     <label for="college">College <span class="req">*</span></label>
                     <div class="select-wrap">
                         <select id="college" name="college" required>
@@ -771,11 +784,15 @@
         // Simple validation + success state
         document.getElementById('submit-btn').addEventListener('click', function () {
             var name = document.getElementById('name').value.trim();
+            var phone = document.getElementById('phone').value.trim();
+            var email = document.getElementById('email').value.trim();
             var college = document.getElementById('college').value;
             var roll = document.getElementById('roll').value.trim();
             var other = document.getElementById('other-college').value.trim();
 
             if (!name) { alert('Please enter your full name.'); document.getElementById('name').focus(); return; }
+            if (!phone) { alert('Please enter your phone number.'); document.getElementById('phone').focus(); return; }
+            if (!email || !email.includes('@')) { alert('Please enter a valid email address.'); document.getElementById('email').focus(); return; }
             if (!college) { alert('Please select your college.'); document.getElementById('college').focus(); return; }
             if (college === 'other' && !other) { alert('Please enter your college name.'); document.getElementById('other-college').focus(); return; }
             if (!roll) { alert('Please enter your roll number.'); document.getElementById('roll').focus(); return; }
