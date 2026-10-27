@@ -16,14 +16,13 @@
             --ink: #171717;
             --blue: #2F5BEA;
             --pink: #FF4FA3;
-            --orange: #FF6B2C;
             --green: #1FA85A;
             --sun: #FFC93C;
             --card: #fff;
-            --muted: #5b574d;
+            --muted: #5b574d
         }
 
-        @media (prefers-color-scheme:dark) {
+        @media(prefers-color-scheme:dark) {
             :root:not([data-theme="light"]) {
                 --cream: #16140f;
                 --ink: #f6f0e0;
@@ -78,7 +77,6 @@
             padding: 0 24px
         }
 
-        /* top bar */
         .topbar {
             padding: 24px 0 0
         }
@@ -127,7 +125,6 @@
             display: inline-block
         }
 
-        /* page header */
         .page-hero {
             padding: 48px 0 40px
         }
@@ -155,7 +152,6 @@
             max-width: 40ch
         }
 
-        /* steps */
         .steps {
             display: flex;
             gap: 10px;
@@ -190,7 +186,6 @@
             background: var(--green)
         }
 
-        /* form card */
         .form-card {
             background: var(--card);
             border-radius: 28px;
@@ -217,7 +212,6 @@
             background: rgba(0, 0, 0, .1)
         }
 
-        /* form fields */
         .field {
             margin-bottom: 24px
         }
@@ -240,13 +234,12 @@
 
         input[type=text],
         input[type=tel],
-        select,
-        textarea {
+        select {
             width: 100%;
             padding: 14px 18px;
             border: 2px solid rgba(0, 0, 0, .12);
             border-radius: 14px;
-            font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+            font-family: inherit;
             font-size: 1rem;
             font-weight: 500;
             background: var(--cream);
@@ -259,14 +252,12 @@
 
         input[type=text]:focus,
         input[type=tel]:focus,
-        select:focus,
-        textarea:focus {
+        select:focus {
             border-color: var(--blue);
             box-shadow: 0 0 0 4px rgba(47, 91, 234, .12)
         }
 
-        input::placeholder,
-        textarea::placeholder {
+        input::placeholder {
             color: var(--muted);
             opacity: .7
         }
@@ -283,14 +274,12 @@
         .select-wrap::after {
             content: '';
             position: absolute;
-            right: 16px;
+            right: 18px;
             top: 50%;
-            transform: translateY(-50%);
             width: 10px;
             height: 10px;
             border-right: 2.5px solid var(--muted);
             border-bottom: 2.5px solid var(--muted);
-            border-radius: 1px;
             transform: translateY(-65%) rotate(45deg);
             pointer-events: none
         }
@@ -306,7 +295,6 @@
             margin-top: 14px
         }
 
-        /* payment section */
         .payment-card {
             background: var(--blue);
             color: #fff;
@@ -372,7 +360,7 @@
             margin-bottom: 4px
         }
 
-        .price-info .badge-eb {
+        .badge-eb {
             display: inline-block;
             background: var(--sun);
             color: #171717;
@@ -390,7 +378,6 @@
             font-size: 1rem
         }
 
-        /* QR placeholder */
         .qr-wrap {
             display: flex;
             flex-direction: column;
@@ -414,8 +401,7 @@
             flex: none;
             border: 3px dashed rgba(47, 91, 234, .25);
             padding: 16px;
-            text-align: center;
-            color: #5b574d;
+            text-align: center
         }
 
         .qr-box svg {
@@ -426,14 +412,19 @@
 
         .qr-box span {
             font-size: .72rem;
-            font-family: 'Space Mono', ui-monospace, monospace;
             letter-spacing: .06em;
             color: #6b6659
         }
 
+        .qr-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 12px
+        }
+
         .qr-label {
             font-size: .78rem;
-            font-family: 'Space Mono', ui-monospace, monospace;
             letter-spacing: .08em;
             opacity: .7;
             text-align: center
@@ -467,7 +458,8 @@
         .p-step p {
             font-size: .95rem;
             opacity: .9;
-            padding-top: 6px
+            padding-top: 0;
+            margin-top: 0
         }
 
         .p-step strong {
@@ -476,34 +468,21 @@
             margin-bottom: 2px
         }
 
-        .upi-tag {
-            display: inline-block;
-            background: rgba(255, 255, 255, .15);
-            border-radius: 10px;
-            padding: 10px 16px;
-            font-family: 'Space Mono', monospace;
-            font-size: .85rem;
-            letter-spacing: .04em;
-            margin-top: 8px;
-            cursor: pointer;
-            border: 1.5px solid rgba(255, 255, 255, .25);
-            transition: background .15s
+        .utr-field {
+            position: relative;
+            z-index: 1
         }
 
-        .upi-tag:hover {
-            background: rgba(255, 255, 255, .25)
+        .utr-field input {
+            background: #fff;
+            color: #171717;
+            border-color: transparent
         }
 
-        .copy-msg {
-            font-size: .75rem;
-            opacity: 0;
-            transition: opacity .3s;
-            margin-top: 4px;
-            font-family: 'Space Mono', monospace;
-            color: var(--sun)
+        .utr-field .hint {
+            color: rgba(255, 255, 255, .75)
         }
 
-        /* submit */
         .submit-area {
             text-align: center;
             padding: 8px 0 60px
@@ -519,7 +498,7 @@
             border-radius: 999px;
             border: none;
             cursor: pointer;
-            font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+            font-family: inherit;
             box-shadow: 5px 5px 0 var(--blue);
             transition: transform .15s, box-shadow .15s;
             letter-spacing: -.01em
@@ -535,13 +514,18 @@
             box-shadow: 2px 2px 0 var(--blue)
         }
 
+        .btn-submit:disabled {
+            opacity: .6;
+            cursor: wait;
+            transform: none
+        }
+
         .submit-note {
             margin-top: 14px;
             font-size: .88rem;
             color: var(--muted)
         }
 
-        /* success state */
         .success-card {
             display: none;
             background: var(--green);
@@ -572,6 +556,32 @@
             font-size: 1.1rem
         }
 
+        .wa-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 28px;
+            background: #fff;
+            color: #1FA85A;
+            font-weight: 800;
+            font-size: 1rem;
+            padding: 14px 28px;
+            border-radius: 999px;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, .15);
+            transition: transform .15s, box-shadow .15s
+        }
+
+        .wa-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, .15)
+        }
+
+        .success-card .wa-note {
+            margin-top: 14px;
+            font-size: .82rem;
+            opacity: .7
+        }
+
         footer {
             background: var(--blue);
             color: #fff;
@@ -581,8 +591,7 @@
 
         footer .wrap {
             border-top: 2px solid rgba(255, 255, 255, .3);
-            padding-top: 24px;
-            max-width: 680px
+            padding-top: 24px
         }
 
         @media(max-width:600px) {
@@ -597,9 +606,7 @@
             }
 
             .qr-wrap {
-                align-items: flex-start;
-                flex-direction: row;
-                align-items: center
+                flex-direction: row
             }
 
             .qr-box {
@@ -611,6 +618,16 @@
                 padding: 32px 0 28px
             }
         }
+
+        @media(prefers-reduced-motion:reduce) {
+            html {
+                scroll-behavior: auto
+            }
+
+            * {
+                transition: none !important
+            }
+        }
     </style>
 </head>
 
@@ -618,11 +635,10 @@
 
     <div class="topbar">
         <div class="wrap">
-            <a class="back mono" href="everything-is-designed.html" id="back-link">
+            <a class="back mono" href="everything-is-designed.html">
                 <svg viewBox="0 0 24 24">
                     <polyline points="15 18 9 12 15 6" />
-                </svg>
-                BACK
+                </svg>BACK
             </a>
             <span class="tag mono">REGISTRATION</span>
         </div>
@@ -643,7 +659,7 @@
     <main>
         <div class="wrap">
 
-            <!-- INFO CARD -->
+            <!-- INFO -->
             <div class="form-card" id="info-card">
                 <div class="section-label mono">01 · YOUR DETAILS</div>
 
@@ -663,7 +679,7 @@
                 <div class="field">
                     <label for="email">Email Address <span class="req">*</span></label>
                     <input type="text" id="email" name="email" placeholder="e.g. aisha@example.com" autocomplete="email"
-                        required>
+                        inputmode="email" required>
                     <p class="hint">We'll send event updates to this address</p>
                 </div>
 
@@ -686,10 +702,13 @@
                     <label for="roll">Roll Number <span class="req">*</span></label>
                     <input type="text" id="roll" name="roll" placeholder="e.g. 23BD1A0501" autocomplete="off" required>
                     <p class="hint">Enter your official college roll number</p>
+                    <!-- honeypot: real users never see or fill this -->
+                    <input type="text" name="website" id="website" style="display:none" tabindex="-1"
+                        autocomplete="off">
                 </div>
             </div>
 
-            <!-- PAYMENT CARD -->
+            <!-- PAYMENT -->
             <div class="payment-card" id="payment-card">
                 <div class="section-label mono">02 · PAYMENT</div>
                 <div class="payment-top">
@@ -715,8 +734,8 @@
                                 </div>
                                 <div class="p-step">
                                     <div class="p-num">3</div>
-                                    <div><strong>Screenshot &amp; submit</strong>
-                                        <p>Keep the screenshot — we'll verify at the door</p>
+                                    <div><strong>Enter your transaction ID</strong>
+                                        <p>Copy the 12-digit UTR below, then confirm</p>
                                     </div>
                                 </div>
                             </div>
@@ -725,8 +744,8 @@
 
                     <div class="qr-wrap">
                         <div class="qr-box" id="qr-placeholder">
-                            <!-- Replace the contents of this div with an <img> tag pointing to your QR code image, e.g.:
-                 <img src="qr.png" alt="Payment QR Code" style="width:100%;border-radius:12px"> -->
+                            <!-- To use your real QR, delete the svg + span below and put:
+                 <img src="qr.png" alt="Payment QR code"> -->
                             <svg viewBox="0 0 24 24" fill="none" stroke="#2F5BEA" stroke-width="1.5"
                                 stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="3" width="7" height="7" rx="1" />
@@ -737,10 +756,17 @@
                                 <rect x="5" y="16" width="3" height="3" fill="#2F5BEA" stroke="none" />
                                 <path d="M14 14h2v2h-2z M18 14h3 M14 18v3 M18 18h3v3h-3z" />
                             </svg>
-                            <span>QR CODE<br>GOES HERE</span>
+                            <span class="mono">QR CODE<br>GOES HERE</span>
                         </div>
                         <div class="qr-label mono">SCAN TO PAY · ₹149</div>
                     </div>
+                </div>
+
+                <div class="field utr-field">
+                    <label for="utr">UPI Transaction ID <span class="req">*</span></label>
+                    <input type="text" id="utr" name="utr" placeholder="12-digit UTR from your payment app"
+                        inputmode="numeric" maxlength="12" autocomplete="off" required>
+                    <p class="hint">Find it in your payment app under transaction details</p>
                 </div>
             </div>
 
@@ -754,21 +780,17 @@
             <div class="success-card" id="success-card">
                 <span class="big-emoji">🎉</span>
                 <h2>You're registered!</h2>
-                <p>See you on <strong>Thu, 12 Nov</strong> at <strong>10 AM</strong> in the Seminar Hall, Block
-                    4.<br>Keep your payment screenshot handy at the door.</p>
-                <a href="https://chat.whatsapp.com/xxxxxxxxxxxxxxxxxxxxxxxx" target="_blank" rel="noopener"
-                    id="whatsapp-link"
-                    style="display:inline-flex;align-items:center;gap:10px;margin-top:28px;background:#fff;color:#1FA85A;font-weight:800;font-size:1rem;padding:14px 28px;border-radius:999px;box-shadow:4px 4px 0 rgba(0,0,0,.15);text-decoration:none;transition:transform .15s,box-shadow .15s"
-                    onmouseover="this.style.transform='translate(-2px,-2px)';this.style.boxShadow='6px 6px 0 rgba(0,0,0,.15)'"
-                    onmouseout="this.style.transform='';this.style.boxShadow='4px 4px 0 rgba(0,0,0,.15)'">
+                <p>See you on <strong>Thu, 12 Nov</strong> at <strong>10 AM</strong> at <strong>MJCET</strong>.<br>Carry
+                    your college ID to the venue.</p>
+                <a class="wa-btn" id="whatsapp-link" href="https://chat.whatsapp.com/xxxxxxxxxxxxxxxxxxxxxxxx"
+                    target="_blank" rel="noopener">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="#1FA85A">
                         <path
                             d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                     </svg>
                     Join WhatsApp Group for Updates
                 </a>
-                <p style="margin-top:14px;font-size:.82rem;opacity:.7;font-family:'Space Mono',monospace">Get event
-                    reminders, venue info &amp; last-minute updates</p>
+                <p class="wa-note mono">Get event reminders, venue info &amp; last-minute updates</p>
             </div>
 
         </div>
@@ -779,15 +801,17 @@
     </footer>
 
     <script>
+        // >>> PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL (ends in /exec) <<<
+        var SCRIPT_URL = 'PASTE_YOUR_WEB_APP_URL_HERE';
+
         // Show/hide "other college" input
         document.getElementById('college').addEventListener('change', function () {
             var show = this.value === 'other';
-            var f = document.getElementById('other-college-field');
-            f.style.display = show ? 'block' : 'none';
+            document.getElementById('other-college-field').style.display = show ? 'block' : 'none';
             document.getElementById('other-college').required = show;
         });
 
-        // Step pill highlight on scroll/interaction
+        // Step pills
         function activatePill(id) {
             ['pill-info', 'pill-pay', 'pill-done'].forEach(function (p) {
                 document.getElementById(p).className = 'step-pill';
@@ -795,39 +819,69 @@
             document.getElementById(id).className = 'step-pill active';
         }
 
-        // Simple validation + success state
-        document.getElementById('submit-btn').addEventListener('click', function () {
-            var name = document.getElementById('name').value.trim();
-            var phone = document.getElementById('phone').value.trim();
-            var email = document.getElementById('email').value.trim();
-            var college = document.getElementById('college').value;
-            var roll = document.getElementById('roll').value.trim();
-            var other = document.getElementById('other-college').value.trim();
+        // Submit to Google Sheets
+        document.getElementById('submit-btn').addEventListener('click', async function () {
+            var btn = this;
+            var $ = function (id) { return document.getElementById(id); };
+            var v = function (id) { return $(id).value.trim(); };
+            var name = v('name'), phone = v('phone'), email = v('email'),
+                college = v('college'), roll = v('roll'), other = v('other-college'), utr = v('utr');
 
-            if (!name) { alert('Please enter your full name.'); document.getElementById('name').focus(); return; }
-            if (!phone || phone.replace(/\D/g, '').length !== 10) { alert('Please enter a valid 10-digit phone number.'); document.getElementById('phone').focus(); return; }
-            if (!email || !email.includes('@')) { alert('Please enter a valid email address.'); document.getElementById('email').focus(); return; }
-            if (!college) { alert('Please select your college.'); document.getElementById('college').focus(); return; }
-            if (college === 'other' && !other) { alert('Please enter your college name.'); document.getElementById('other-college').focus(); return; }
-            if (!roll) { alert('Please enter your roll number.'); document.getElementById('roll').focus(); return; }
+            if (!name) { alert('Please enter your full name.'); $('name').focus(); return; }
+            if (!/^\d{10}$/.test(phone)) { alert('Please enter a valid 10-digit phone number.'); $('phone').focus(); return; }
+            if (!/^\S+@\S+\.\S+$/.test(email)) { alert('Please enter a valid email address.'); $('email').focus(); return; }
+            if (!college) { alert('Please select your college.'); $('college').focus(); return; }
+            if (college === 'other' && !other) { alert('Please enter your college name.'); $('other-college').focus(); return; }
+            if (!roll) { alert('Please enter your roll number.'); $('roll').focus(); return; }
+            if (!/^\d{12}$/.test(utr)) { alert('Please enter the 12-digit UPI transaction ID.'); $('utr').focus(); return; }
 
-            // Show success
-            document.getElementById('info-card').style.display = 'none';
-            document.getElementById('payment-card').style.display = 'none';
-            document.getElementById('submit-area').style.display = 'none';
-            var s = document.getElementById('success-card');
-            s.style.display = 'block';
-            s.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            document.getElementById('pill-info').className = 'step-pill done';
-            document.getElementById('pill-pay').className = 'step-pill done';
-            document.getElementById('pill-done').className = 'step-pill active';
+            btn.disabled = true;
+            btn.textContent = 'Submitting…';
+
+            try {
+                var body = new URLSearchParams({
+                    name: name, phone: phone, email: email,
+                    college: college === 'other' ? 'Other' : 'MJCET',
+                    'other-college': other, roll: roll, utr: utr,
+                    website: v('website')
+                });
+                var res = await fetch(SCRIPT_URL, { method: 'POST', body: body });
+                var out = await res.json();
+
+                if (!out.ok) {
+                    var msgs = {
+                        full: 'Sorry, all seats are taken.',
+                        duplicate_email: 'This email is already registered.',
+                        duplicate_utr: 'This transaction ID has already been used.',
+                        invalid: 'Some details look wrong. Please check and try again.'
+                    };
+                    alert(msgs[out.error] || 'Something went wrong. Please try again.');
+                    btn.disabled = false;
+                    btn.textContent = 'Confirm Registration →';
+                    return;
+                }
+
+                $('info-card').style.display = 'none';
+                $('payment-card').style.display = 'none';
+                $('submit-area').style.display = 'none';
+                observer.disconnect();
+                var s = $('success-card');
+                s.style.display = 'block';
+                s.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                $('pill-info').className = 'step-pill done';
+                $('pill-pay').className = 'step-pill done';
+                $('pill-done').className = 'step-pill active';
+            } catch (err) {
+                alert('Could not reach the server. Check your connection and try again.');
+                btn.disabled = false;
+                btn.textContent = 'Confirm Registration →';
+            }
         });
 
         // Highlight payment pill when payment card is in view
         var observer = new IntersectionObserver(function (entries) {
             entries.forEach(function (e) {
-                if (e.isIntersecting) activatePill('pill-pay');
-                else activatePill('pill-info');
+                activatePill(e.isIntersecting ? 'pill-pay' : 'pill-info');
             });
         }, { threshold: 0.4 });
         observer.observe(document.getElementById('payment-card'));
