@@ -114,6 +114,12 @@
             stroke-linejoin: round
         }
 
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 16px
+        }
+
         .tag {
             background: var(--green);
             color: #fff;
@@ -123,6 +129,15 @@
             letter-spacing: .04em;
             transform: rotate(-2deg);
             display: inline-block
+        }
+
+        .logo {
+            height: 44px;
+            width: auto;
+            display: block;
+            background: var(--blue);
+            border-radius: 10px;
+            padding: 6px 10px
         }
 
         .page-hero {
@@ -388,39 +403,22 @@
         }
 
         .qr-box {
-            width: 180px;
-            height: 180px;
+            width: 220px;
+            height: 220px;
             background: #fff;
             border-radius: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            overflow: hidden;
             box-shadow: 6px 6px 0 rgba(0, 0, 0, .2);
             flex: none;
-            border: 3px dashed rgba(47, 91, 234, .25);
-            padding: 16px;
-            text-align: center
-        }
-
-        .qr-box svg {
-            width: 52px;
-            height: 52px;
-            opacity: .4
-        }
-
-        .qr-box span {
-            font-size: .72rem;
-            letter-spacing: .06em;
-            color: #6b6659
+            padding: 0;
+            border: none
         }
 
         .qr-box img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            border-radius: 12px
+            display: block
         }
 
         .qr-label {
@@ -458,7 +456,6 @@
         .p-step p {
             font-size: .95rem;
             opacity: .9;
-            padding-top: 0;
             margin-top: 0
         }
 
@@ -610,12 +607,16 @@
             }
 
             .qr-box {
-                width: 140px;
-                height: 140px
+                width: 170px;
+                height: 170px
             }
 
             .page-hero {
                 padding: 32px 0 28px
+            }
+
+            .logo {
+                height: 34px
             }
         }
 
@@ -640,7 +641,10 @@
                     <polyline points="15 18 9 12 15 6" />
                 </svg>BACK
             </a>
-            <span class="tag mono">REGISTRATION</span>
+            <div class="top-right">
+                <span class="tag mono">REGISTRATION</span>
+                <img class="logo" src="White Logo - Transparent BG.png" alt="IEEE Computational Intelligence Society">
+            </div>
         </div>
     </div>
 
@@ -744,8 +748,7 @@
 
                     <div class="qr-wrap">
                         <div class="qr-box" id="qr-placeholder">
-                            <img src="paymentqr.jpeg">
-                            <span class="mono">QR CODE<br>GOES HERE</span>
+                            <img src="paymentqr.jpeg" alt="Payment QR code">
                         </div>
                         <div class="qr-label mono">SCAN TO PAY · ₹149</div>
                     </div>
@@ -791,8 +794,8 @@
     </footer>
 
     <script>
-        // >>> PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL (ends in /exec) <<<
-        var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbys6l1jzrI4Jw5mWzuZXlaGlZ1bOYP0SQQnJniZxihazhOFZj-xRfF6dk9ZUg-5TquxNQ/exec'
+        var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbys6l1jzrI4Jw5mWzuZXlaGlZ1bOYP0SQQnJniZxihazhOFZj-xRfF6dk9ZUg-5TquxNQ/exec';
+
         // Show/hide "other college" input
         document.getElementById('college').addEventListener('change', function () {
             var show = this.value === 'other';
