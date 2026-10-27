@@ -140,8 +140,8 @@
       width: auto;
       display: block;
       background: var(--blue);
-      border-radius: 10px;
-      padding: 6px 10px
+      border-radius: 12px;
+      padding: 8px 14px
     }
 
     h1 {
@@ -552,8 +552,56 @@
         margin: 0 auto
       }
 
-      .logo {
-        height: 34px
+      .top .tag {
+        order: 1;
+        font-size: .8rem;
+        padding: 7px 12px
+      }
+
+      .top-right {
+        display: contents
+      }
+
+      .top-right .logo {
+        order: 2;
+        height: 56px;
+        margin-left: auto
+      }
+
+      .top-right span {
+        order: 3;
+        flex-basis: 100%;
+        text-align: left;
+        margin-top: 14px
+      }
+
+      .countdown {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px
+      }
+
+      .cd-sep {
+        display: none
+      }
+
+      .cd-unit {
+        min-width: 0;
+        padding: 12px 4px 10px;
+        border-radius: 14px
+      }
+
+      .cd-num {
+        font-size: clamp(1.6rem, 8vw, 2.4rem)
+      }
+
+      .cd-label {
+        font-size: .6rem;
+        letter-spacing: .04em
+      }
+
+      .cd-done {
+        grid-column: 1/-1
       }
     }
 
@@ -581,7 +629,7 @@
         <span class="tag">a seminar · open to all</span>
         <div class="top-right">
           <span>MJCET · HYDERABAD<br>THU 12.11.2026</span>
-          <img class="logo" src="White Logo - Transparent BG.png" alt="IEEE Computational Intelligence Society">
+          <img class="logo" src="White%20Logo%20-%20Transparent%20BG.png" alt="IEEE Computational Intelligence Society">
         </div>
       </div>
       <svg class="spark" viewBox="0 0 40 40" aria-hidden="true">
@@ -716,7 +764,7 @@
   </section>
 
   <footer>
-    <div class="wrap">hosted by <strong>Simaan Akbar</strong> in collabration with<strong> IEEE CIS - MJCET</strong> ·
+    <div class="wrap">hosted by <strong>Simaan Akbar</strong> in collaboration with <strong>IEEE CIS - MJCET</strong> ·
       open to everyone</div>
   </footer>
 

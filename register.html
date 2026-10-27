@@ -136,8 +136,8 @@
             width: auto;
             display: block;
             background: var(--blue);
-            border-radius: 10px;
-            padding: 6px 10px
+            border-radius: 12px;
+            padding: 8px 14px
         }
 
         .page-hero {
@@ -403,8 +403,8 @@
         }
 
         .qr-box {
-            width: 220px;
-            height: 220px;
+            width: 240px;
+            height: 240px;
             background: #fff;
             border-radius: 20px;
             overflow: hidden;
@@ -603,20 +603,42 @@
             }
 
             .qr-wrap {
-                flex-direction: row
+                width: 100%
             }
 
             .qr-box {
-                width: 170px;
-                height: 170px
+                width: min(100%, 340px);
+                height: auto;
+                aspect-ratio: 1/1
             }
 
             .page-hero {
                 padding: 32px 0 28px
             }
 
-            .logo {
-                height: 34px
+            .topbar .wrap::after {
+                content: '';
+                order: 3;
+                flex-basis: 100%;
+                height: 0
+            }
+
+            .back {
+                order: 1
+            }
+
+            .top-right {
+                display: contents
+            }
+
+            .top-right .logo {
+                order: 2;
+                height: 56px;
+                margin-left: auto
+            }
+
+            .top-right .tag {
+                order: 4
             }
         }
 
@@ -643,7 +665,8 @@
             </a>
             <div class="top-right">
                 <span class="tag mono">REGISTRATION</span>
-                <img class="logo" src="White Logo - Transparent BG.png" alt="IEEE Computational Intelligence Society">
+                <img class="logo" src="White%20Logo%20-%20Transparent%20BG.png"
+                    alt="IEEE Computational Intelligence Society">
             </div>
         </div>
     </div>
@@ -790,7 +813,8 @@
     </main>
 
     <footer>
-        <div class="wrap">hosted by <strong>Simaan Akbar</strong> · open to everyone</div>
+        <div class="wrap">hosted by <strong>Simaan Akbar</strong> in collaboration with <strong>IEEE CIS -
+                MJCET</strong> · open to everyone</div>
     </footer>
 
     <script>
