@@ -1,206 +1,739 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>everything is designed. – a seminar at MJCET</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --cream:#FBF6E9; --ink:#171717; --blue:#2F5BEA; --pink:#FF4FA3; --orange:#FF6B2C; --green:#1FA85A; --sun:#FFC93C; --card:#fff; --muted:#5b574d;
-  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){--cream:#16140f;--ink:#f6f0e0;--card:#24211a;--muted:#b9b3a3}
-}
-:root[data-theme="dark"]{--cream:#16140f;--ink:#f6f0e0;--card:#24211a;--muted:#b9b3a3}
-*{box-sizing:border-box;margin:0}
-html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
-body{background:var(--cream);color:var(--ink);font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:500;line-height:1.5;overflow-x:hidden}
-.mono{font-family:'Space Mono',ui-monospace,monospace}
-a{color:inherit}
-:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
-.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>everything is designed. – a seminar at MJCET</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --cream: #FBF6E9;
+      --ink: #171717;
+      --blue: #2F5BEA;
+      --pink: #FF4FA3;
+      --orange: #FF6B2C;
+      --green: #1FA85A;
+      --sun: #FFC93C;
+      --card: #fff;
+      --muted: #5b574d;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
 
-/* buttons */
-.btn{display:inline-block;background:var(--ink);color:var(--cream);font-weight:800;font-size:1.15rem;padding:16px 30px;border-radius:999px;text-decoration:none;box-shadow:5px 5px 0 var(--blue);transition:transform .15s,box-shadow .15s}
-.btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--blue)}
-.btn:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--blue)}
+    @media (prefers-color-scheme:dark) {
+      :root:not([data-theme="light"]) {
+        --cream: #16140f;
+        --ink: #f6f0e0;
+        --card: #24211a;
+        --muted: #b9b3a3
+      }
+    }
 
-/* hero */
-.hero{padding:28px 0 90px;position:relative}
-.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;font-size:.8rem;letter-spacing:.08em}
-.tag{background:var(--green);color:#fff;padding:8px 14px;transform:rotate(-2deg);font-size:1rem;letter-spacing:0;font-weight:700}
-h1{font-weight:800;font-size:clamp(3rem,13vw,9.5rem);line-height:.9;letter-spacing:-.045em;margin-top:56px}
-h1 .blue{display:block;background:linear-gradient(180deg,var(--blue) 35%,#8fa6ff);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.08em}
-.spark{position:absolute;right:4%;top:150px;width:56px;color:var(--sun);animation:spin 8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.sub{font-size:clamp(1.3rem,3.2vw,2rem);font-weight:800;line-height:1.25;margin:44px 0 36px;letter-spacing:-.02em}
-.sub em{font-style:normal;color:var(--pink)}
-.hero-cta{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
-.hero-cta span{font-size:.9rem;color:var(--muted)}
+    :root[data-theme="dark"] {
+      --cream: #16140f;
+      --ink: #f6f0e0;
+      --card: #24211a;
+      --muted: #b9b3a3
+    }
 
-/* feature sections */
-.feat{padding:90px 0;color:#fff}
-.feat .wrap{display:grid;grid-template-columns:1fr 1.3fr;gap:48px;align-items:center}
-.feat.b{background:var(--blue)}.feat.p{background:var(--pink);color:#171717}.feat.o{background:var(--orange);color:#171717}.feat.g{background:var(--green)}
-.feat.alt .wrap{grid-template-columns:1.3fr 1fr}.feat.alt .art{order:2}
-.badge{display:inline-grid;place-items:center;width:64px;height:64px;border-radius:50%;background:#fff;color:#171717;font-weight:800;font-size:1.5rem;margin-bottom:20px;box-shadow:4px 4px 0 rgba(0,0,0,.25)}
-.feat h2{font-weight:800;font-size:clamp(2.2rem,6vw,4.2rem);line-height:.95;letter-spacing:-.04em}
-.feat p{font-size:1.2rem;margin-top:18px;max-width:34ch}
-.art{background:#fff;color:#171717;border-radius:24px;padding:28px;box-shadow:8px 8px 0 rgba(0,0,0,.22);transform:rotate(1.5deg)}
-.feat.alt .art{transform:rotate(-1.5deg)}
-.art .big{font-size:4.2rem;line-height:1}
-.art ul{list-style:none;padding:0;margin-top:14px;display:grid;gap:10px}
-.art li{padding:12px 16px;background:#f3eee0;border-radius:14px;font-weight:700}
-.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-.chips span{background:#f3eee0;border-radius:999px;padding:8px 16px;font-weight:800}
-.art .label{font-size:.78rem;letter-spacing:.06em;color:#6b6659}
+    * {
+      box-sizing: border-box;
+      margin: 0
+    }
 
-/* details */
-.details{background:var(--cream);padding:90px 0 70px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:36px}
-.box{background:var(--card);border-radius:24px;padding:30px;box-shadow:6px 6px 0 rgba(0,0,0,.12)}
-.box h3{font-weight:800;font-size:clamp(2rem,5vw,3.4rem);letter-spacing:-.03em;line-height:1}
-.box p{margin-top:10px;color:var(--muted);font-size:1.1rem}
-.pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
-.pills span{background:var(--card);border-radius:999px;padding:9px 18px;font-weight:800;box-shadow:3px 3px 0 rgba(0,0,0,.12)}
-.details h2{font-weight:800;font-size:clamp(2.2rem,6vw,4rem);letter-spacing:-.04em;line-height:1}
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: env(safe-area-inset-top, 0px)
+    }
 
-/* early bird */
-.final{background:var(--blue);color:#fff;padding:90px 0 60px;position:relative}
-.final .wrap{display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap}
-.final h2{font-weight:800;font-size:clamp(2.4rem,7vw,5rem);line-height:.95;letter-spacing:-.04em;max-width:11ch}
-.burst{position:relative;width:230px;height:230px;display:grid;place-items:center;text-align:center;color:#171717;transform:rotate(8deg);flex:none}
-.burst svg{position:absolute;inset:0;width:100%;height:100%;color:var(--sun)}
-.burst div{position:relative}
-.burst small{display:block;letter-spacing:.14em;font-size:.8rem}
-.burst s{display:block;font-weight:800;font-size:1.6rem}
-.burst b{display:block;font-weight:800;font-size:3.6rem;line-height:1;letter-spacing:-.04em}
-.final .btn{background:var(--cream);color:var(--ink);box-shadow:5px 5px 0 var(--ink)}
-.final .btn:hover{box-shadow:7px 7px 0 var(--ink)}
-.final .note{margin-top:18px;opacity:.85}
-footer{background:var(--blue);color:#fff;padding:0 0 40px;font-size:1.05rem}
-footer .wrap{border-top:2px solid rgba(255,255,255,.3);padding-top:24px}
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+      font-weight: 500;
+      line-height: 1.5;
+      overflow-x: hidden
+    }
 
-@media(max-width:760px){
-  .feat .wrap,.feat.alt .wrap,.grid{grid-template-columns:1fr}
-  .feat.alt .art{order:0}
-  .feat,.details,.final{padding-top:64px;padding-bottom:56px}
-  .spark{width:36px;top:120px}
-  .burst{margin:0 auto}
-}
-@media(prefers-reduced-motion:reduce){.spark{animation:none}html{scroll-behavior:auto}.btn{transition:none}}
-</style>
+    .mono {
+      font-family: 'Space Mono', ui-monospace, monospace
+    }
+
+    a {
+      color: inherit
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--pink);
+      outline-offset: 3px
+    }
+
+    .wrap {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 24px
+    }
+
+    /* buttons */
+    .btn {
+      display: inline-block;
+      background: var(--ink);
+      color: var(--cream);
+      font-weight: 800;
+      font-size: 1.15rem;
+      padding: 16px 30px;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 5px 5px 0 var(--blue);
+      transition: transform .15s, box-shadow .15s
+    }
+
+    .btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 7px 7px 0 var(--blue)
+    }
+
+    .btn:active {
+      transform: translate(3px, 3px);
+      box-shadow: 2px 2px 0 var(--blue)
+    }
+
+    /* hero */
+    .hero {
+      padding: 28px 0 90px;
+      position: relative
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: .8rem;
+      letter-spacing: .08em
+    }
+
+    .tag {
+      background: var(--green);
+      color: #fff;
+      padding: 8px 14px;
+      transform: rotate(-2deg);
+      font-size: 1rem;
+      letter-spacing: 0;
+      font-weight: 700
+    }
+
+    h1 {
+      font-weight: 800;
+      font-size: clamp(3rem, 13vw, 9.5rem);
+      line-height: .9;
+      letter-spacing: -.045em;
+      margin-top: 56px
+    }
+
+    h1 .blue {
+      display: block;
+      background: linear-gradient(180deg, var(--blue) 35%, #8fa6ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      padding-bottom: .08em
+    }
+
+    .spark {
+      position: absolute;
+      right: 4%;
+      top: 150px;
+      width: 56px;
+      color: var(--sun);
+      animation: spin 8s linear infinite
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .sub {
+      font-size: clamp(1.3rem, 3.2vw, 2rem);
+      font-weight: 800;
+      line-height: 1.25;
+      margin: 44px 0 36px;
+      letter-spacing: -.02em
+    }
+
+    .sub em {
+      font-style: normal;
+      color: var(--pink)
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+      flex-wrap: wrap
+    }
+
+    .hero-cta span {
+      font-size: .9rem;
+      color: var(--muted)
+    }
+
+    /* feature sections */
+    .feat {
+      padding: 90px 0;
+      color: #fff
+    }
+
+    .feat .wrap {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 48px;
+      align-items: center
+    }
+
+    .feat.b {
+      background: var(--blue)
+    }
+
+    .feat.p {
+      background: var(--pink);
+      color: #171717
+    }
+
+    .feat.o {
+      background: var(--orange);
+      color: #171717
+    }
+
+    .feat.g {
+      background: var(--green)
+    }
+
+    .feat.alt .wrap {
+      grid-template-columns: 1.3fr 1fr
+    }
+
+    .feat.alt .art {
+      order: 2
+    }
+
+    .badge {
+      display: inline-grid;
+      place-items: center;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #fff;
+      color: #171717;
+      font-weight: 800;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      box-shadow: 4px 4px 0 rgba(0, 0, 0, .25)
+    }
+
+    .feat h2 {
+      font-weight: 800;
+      font-size: clamp(2.2rem, 6vw, 4.2rem);
+      line-height: .95;
+      letter-spacing: -.04em
+    }
+
+    .feat p {
+      font-size: 1.2rem;
+      margin-top: 18px;
+      max-width: 34ch
+    }
+
+    .art {
+      background: #fff;
+      color: #171717;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 8px 8px 0 rgba(0, 0, 0, .22);
+      transform: rotate(1.5deg)
+    }
+
+    .feat.alt .art {
+      transform: rotate(-1.5deg)
+    }
+
+    .art .big {
+      font-size: 4.2rem;
+      line-height: 1
+    }
+
+    .art ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 14px;
+      display: grid;
+      gap: 10px
+    }
+
+    .art li {
+      padding: 12px 16px;
+      background: #f3eee0;
+      border-radius: 14px;
+      font-weight: 700
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px
+    }
+
+    .chips span {
+      background: #f3eee0;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-weight: 800
+    }
+
+    .art .label {
+      font-size: .78rem;
+      letter-spacing: .06em;
+      color: #6b6659
+    }
+
+    /* details */
+    .details {
+      background: var(--cream);
+      padding: 90px 0 70px
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-top: 36px
+    }
+
+    .box {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: 6px 6px 0 rgba(0, 0, 0, .12)
+    }
+
+    .box h3 {
+      font-weight: 800;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      letter-spacing: -.03em;
+      line-height: 1
+    }
+
+    .box p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 1.1rem
+    }
+
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px
+    }
+
+    .pills span {
+      background: var(--card);
+      border-radius: 999px;
+      padding: 9px 18px;
+      font-weight: 800;
+      box-shadow: 3px 3px 0 rgba(0, 0, 0, .12)
+    }
+
+    .details h2 {
+      font-weight: 800;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      letter-spacing: -.04em;
+      line-height: 1
+    }
+
+    /* early bird */
+    .final {
+      background: var(--blue);
+      color: #fff;
+      padding: 90px 0 60px;
+      position: relative
+    }
+
+    .final .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      flex-wrap: wrap
+    }
+
+    .final h2 {
+      font-weight: 800;
+      font-size: clamp(2.4rem, 7vw, 5rem);
+      line-height: .95;
+      letter-spacing: -.04em;
+      max-width: 11ch
+    }
+
+    .burst {
+      position: relative;
+      width: 230px;
+      height: 230px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: #171717;
+      transform: rotate(8deg);
+      flex: none
+    }
+
+    .burst svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      color: var(--sun)
+    }
+
+    .burst div {
+      position: relative
+    }
+
+    .burst small {
+      display: block;
+      letter-spacing: .14em;
+      font-size: .8rem
+    }
+
+    .burst s {
+      display: block;
+      font-weight: 800;
+      font-size: 1.6rem
+    }
+
+    .burst b {
+      display: block;
+      font-weight: 800;
+      font-size: 3.6rem;
+      line-height: 1;
+      letter-spacing: -.04em
+    }
+
+    .final .btn {
+      background: var(--cream);
+      color: var(--ink);
+      box-shadow: 5px 5px 0 var(--ink)
+    }
+
+    .final .btn:hover {
+      box-shadow: 7px 7px 0 var(--ink)
+    }
+
+    .final .note {
+      margin-top: 18px;
+      opacity: .85
+    }
+
+    footer {
+      background: var(--blue);
+      color: #fff;
+      padding: 0 0 40px;
+      font-size: 1.05rem
+    }
+
+    footer .wrap {
+      border-top: 2px solid rgba(255, 255, 255, .3);
+      padding-top: 24px
+    }
+
+    /* countdown */
+    .countdown {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+      align-items: flex-start
+    }
+
+    .cd-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--card);
+      border-radius: 20px;
+      padding: 18px 24px 14px;
+      box-shadow: 5px 5px 0 rgba(0, 0, 0, .12);
+      min-width: 80px;
+      transition: transform .1s
+    }
+
+    .cd-unit:hover {
+      transform: translateY(-3px)
+    }
+
+    .cd-num {
+      font-weight: 800;
+      font-size: clamp(2.4rem, 7vw, 4rem);
+      line-height: 1;
+      letter-spacing: -.04em;
+      font-variant-numeric: tabular-nums
+    }
+
+    .cd-label {
+      font-size: .7rem;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-top: 4px;
+      font-family: 'Space Mono', ui-monospace, monospace
+    }
+
+    .cd-sep {
+      font-weight: 800;
+      font-size: 3rem;
+      line-height: 1;
+      align-self: center;
+      opacity: .3;
+      padding-top: 4px
+    }
+
+    .cd-done {
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: var(--green)
+    }
+
+    @media(max-width:760px) {
+
+      .feat .wrap,
+      .feat.alt .wrap,
+      .grid {
+        grid-template-columns: 1fr
+      }
+
+      .feat.alt .art {
+        order: 0
+      }
+
+      .feat,
+      .details,
+      .final {
+        padding-top: 64px;
+        padding-bottom: 56px
+      }
+
+      .spark {
+        width: 36px;
+        top: 120px
+      }
+
+      .burst {
+        margin: 0 auto
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      .spark {
+        animation: none
+      }
+
+      html {
+        scroll-behavior: auto
+      }
+
+      .btn {
+        transition: none
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<header class="hero">
-  <div class="wrap">
-    <div class="top mono">
-      <span class="tag">a seminar · open to all</span>
-      <span>MJCET · HYDERABAD<br>THU 12.11.2026</span>
+  <header class="hero">
+    <div class="wrap">
+      <div class="top mono">
+        <span class="tag">a seminar · open to all</span>
+        <span>MJCET · HYDERABAD<br>THU 12.11.2026</span>
+      </div>
+      <svg class="spark" viewBox="0 0 40 40" aria-hidden="true">
+        <path d="M20 1c1.5 10 9 17.5 19 19-10 1.5-17.5 9-19 19-1.5-10-9-17.5-19-19C11 18.5 18.500 11 20 1z"
+          fill="currentColor" stroke="#171717" stroke-width="2" stroke-linejoin="round" />
+      </svg>
+      <h1>everything<span class="blue">is designed.</span></h1>
+      <p class="sub">even the 🥄 spoon in your hand.<br>even the 🚪 door you <em>pushed</em> wrong today.</p>
+      <div class="hero-cta">
+        <a class="btn" href="#register">Register now</a>
+        <span class="mono">Early bird ₹149 · 10 AM – 2 PM</span>
+      </div>
+      <div class="countdown" id="countdown" role="timer" aria-live="polite" aria-label="Countdown to event">
+        <div class="cd-unit"><span class="cd-num" id="cd-days">--</span><span class="cd-label">DAYS</span></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><span class="cd-num" id="cd-hours">--</span><span class="cd-label">HOURS</span></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><span class="cd-num" id="cd-mins">--</span><span class="cd-label">MINS</span></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><span class="cd-num" id="cd-secs">--</span><span class="cd-label">SECS</span></div>
+      </div>
     </div>
-    <svg class="spark" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 1c1.5 10 9 17.5 19 19-10 1.5-17.5 9-19 19-1.5-10-9-17.5-19-19C11 18.5 18.500 11 20 1z" fill="currentColor" stroke="#171717" stroke-width="2" stroke-linejoin="round"/></svg>
-    <h1>everything<span class="blue">is designed.</span></h1>
-    <p class="sub">even the 🥄 spoon in your hand.<br>even the 🚪 door you <em>pushed</em> wrong today.</p>
-    <div class="hero-cta">
-      <a class="btn" href="#register">Register now</a>
-      <span class="mono">Early bird ₹149 · 10 AM – 2 PM</span>
-    </div>
-  </div>
-</header>
+  </header>
 
-<section class="feat b" id="spot">
-  <div class="wrap">
-    <div>
-      <div class="badge">01</div>
-      <h2>Spot the terrible designs around you</h2>
-      <p>Doors, chairs and everyday things that quietly fight you. Once you see them, you can't unsee them.</p>
+  <section class="feat b" id="spot">
+    <div class="wrap">
+      <div>
+        <div class="badge">01</div>
+        <h2>Spot the terrible designs around you</h2>
+        <p>Doors, chairs and everyday things that quietly fight you. Once you see them, you can't unsee them.</p>
+      </div>
+      <div class="art">
+        <div class="big">🚪🪑🥄</div>
+        <div class="label mono">THINGS YOU'LL ROAST</div>
+        <ul>
+          <li>The door that says pull, but you push</li>
+          <li>The chair nobody can sit on</li>
+          <li>The button you can never find</li>
+        </ul>
+      </div>
     </div>
-    <div class="art">
-      <div class="big">🚪🪑🥄</div>
-      <div class="label mono">THINGS YOU'LL ROAST</div>
-      <ul><li>The door that says pull, but you push</li><li>The chair nobody can sit on</li><li>The button you can never find</li></ul>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="feat p alt" id="think">
-  <div class="wrap">
-    <div>
-      <div class="badge">02</div>
-      <h2>Think like a designer</h2>
-      <p>Learn to ask "why is it like this?" and then play "The Worst Idea Wins".</p>
+  <section class="feat p alt" id="think">
+    <div class="wrap">
+      <div>
+        <div class="badge">02</div>
+        <h2>Think like a designer</h2>
+        <p>Learn to ask "why is it like this?" and then play "The Worst Idea Wins".</p>
+      </div>
+      <div class="art">
+        <div class="big">🧠</div>
+        <div class="label mono">THE GAME</div>
+        <ul>
+          <li>Everyone pitches the worst idea they can</li>
+          <li>The room votes live</li>
+          <li>The worst idea wins</li>
+        </ul>
+      </div>
     </div>
-    <div class="art">
-      <div class="big">🧠</div>
-      <div class="label mono">THE GAME</div>
-      <ul><li>Everyone pitches the worst idea they can</li><li>The room votes live</li><li>The worst idea wins</li></ul>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="feat o" id="rebrands">
-  <div class="wrap">
-    <div>
-      <div class="badge">03</div>
-      <h2>Judge real rebrands, live</h2>
-      <p>Big brands changed their look. You decide: did it work, or did it flop?</p>
+  <section class="feat o" id="rebrands">
+    <div class="wrap">
+      <div>
+        <div class="badge">03</div>
+        <h2>Judge real rebrands, live</h2>
+        <p>Big brands changed their look. You decide: did it work, or did it flop?</p>
+      </div>
+      <div class="art">
+        <div class="big">🎨</div>
+        <div class="label mono">ON THE JUDGING TABLE</div>
+        <div class="chips"><span>Jaguar</span><span>Burger
+            King</span><span>Amul</span><span>Zomato</span><span>CRED</span></div>
+      </div>
     </div>
-    <div class="art">
-      <div class="big">🎨</div>
-      <div class="label mono">ON THE JUDGING TABLE</div>
-      <div class="chips"><span>Jaguar</span><span>Burger King</span><span>Amul</span><span>Zomato</span><span>CRED</span></div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="feat g alt" id="ai">
-  <div class="wrap">
-    <div>
-      <div class="badge">04</div>
-      <h2>Build a brand with AI</h2>
-      <p>Make a brand from scratch with AI, play "Real or AI?" and win the prompt battle.</p>
+  <section class="feat g alt" id="ai">
+    <div class="wrap">
+      <div>
+        <div class="badge">04</div>
+        <h2>Build a brand with AI</h2>
+        <p>Make a brand from scratch with AI, play "Real or AI?" and win the prompt battle.</p>
+      </div>
+      <div class="art">
+        <div class="big">🤖</div>
+        <div class="label mono">BRING YOUR LAPTOP + PHONE</div>
+        <ul>
+          <li>Real or AI? Can you tell?</li>
+          <li>Prompt battle, head to head</li>
+          <li>Your own brand by the end</li>
+        </ul>
+      </div>
     </div>
-    <div class="art">
-      <div class="big">🤖</div>
-      <div class="label mono">BRING YOUR LAPTOP + PHONE</div>
-      <ul><li>Real or AI? Can you tell?</li><li>Prompt battle, head to head</li><li>Your own brand by the end</li></ul>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="details" id="when">
-  <div class="wrap">
-    <h2>When &amp; where</h2>
-    <div class="grid">
-      <div class="box"><div class="label mono">WHEN</div><h3>Thu, 12 Nov</h3><p>10 AM – 2 PM</p></div>
-      <div class="box"><div class="label mono">WHERE</div><h3>MJCET</h3><p>Muffakham Jah College of Engineering &amp; Technology, Hyderabad</p></div>
+  <section class="details" id="when">
+    <div class="wrap">
+      <h2>When &amp; where</h2>
+      <div class="grid">
+        <div class="box">
+          <div class="label mono">WHEN</div>
+          <h3>Thu, 12 Nov</h3>
+          <p>10 AM – 2 PM</p>
+        </div>
+        <div class="box">
+          <div class="label mono">WHERE</div>
+          <h3>MJCET</h3>
+          <p>Muffakham Jah College of Engineering &amp; Technology, Hyderabad</p>
+        </div>
+      </div>
+      <div class="pills"><span>tea + snacks</span><span>bring laptop + phone</span><span>live polls + games</span></div>
     </div>
-    <div class="pills"><span>tea + snacks</span><span>bring laptop + phone</span><span>live polls + games</span></div>
-  </div>
-</section>
+  </section>
 
-<section class="final" id="register">
-  <div class="wrap">
-    <div>
-      <h2>Grab your seat.</h2>
-      <p class="note">Open to everyone. Early bird price won't last.</p>
-      <p style="margin-top:28px"><a class="btn" href="#register">Register now</a></p>
+  <section class="final" id="register">
+    <div class="wrap">
+      <div>
+        <h2>Grab your seat.</h2>
+        <p class="note">Open to everyone. Early bird price won't last.</p>
+        <p style="margin-top:28px"><a class="btn" href="#register">Register now</a></p>
+      </div>
+      <div class="burst" aria-label="Early bird price 149 rupees, down from 299">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <polygon fill="currentColor" stroke="#171717" stroke-width="1.2" stroke-linejoin="round"
+            points="50,2 58,12 70,6 74,19 87,18 86,31 98,36 91,47 99,58 87,63 89,76 76,77 72,90 60,86 50,98 40,86 28,90 24,77 11,76 13,63 1,58 9,47 2,36 14,31 13,18 26,19 30,6 42,12" />
+        </svg>
+        <div><small class="mono">EARLY BIRD</small><s>₹299</s><b>₹149</b></div>
+      </div>
     </div>
-    <div class="burst" aria-label="Early bird price 149 rupees, down from 299">
-      <svg viewBox="0 0 100 100" aria-hidden="true"><polygon fill="currentColor" stroke="#171717" stroke-width="1.2" stroke-linejoin="round" points="50,2 58,12 70,6 74,19 87,18 86,31 98,36 91,47 99,58 87,63 89,76 76,77 72,90 60,86 50,98 40,86 28,90 24,77 11,76 13,63 1,58 9,47 2,36 14,31 13,18 26,19 30,6 42,12"/></svg>
-      <div><small class="mono">EARLY BIRD</small><s>₹299</s><b>₹149</b></div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<footer>
-  <div class="wrap">hosted by <strong>Simaan Akbar</strong> · open to everyone</div>
-</footer>
+  <footer>
+    <div class="wrap">hosted by <strong>Simaan Akbar</strong> · open to everyone</div>
+  </footer>
+
+  <script>
+    (function () {
+      // Target: Thu 12 Nov 2026, 10:00 AM IST (UTC+5:30)
+      var target = new Date('2026-11-12T10:00:00+05:30').getTime();
+      var days = document.getElementById('cd-days');
+      var hours = document.getElementById('cd-hours');
+      var mins = document.getElementById('cd-mins');
+      var secs = document.getElementById('cd-secs');
+      var wrap = document.getElementById('countdown');
+
+      function pad(n) { return String(n).padStart(2, '0'); }
+
+      function tick() {
+        var now = Date.now();
+        var diff = target - now;
+        if (diff <= 0) {
+          wrap.innerHTML = '<span class="cd-done">🎉 It\'s happening NOW!</span>';
+          return;
+        }
+        var d = Math.floor(diff / 86400000);
+        var h = Math.floor((diff % 86400000) / 3600000);
+        var m = Math.floor((diff % 3600000) / 60000);
+        var s = Math.floor((diff % 60000) / 1000);
+        days.textContent = pad(d);
+        hours.textContent = pad(h);
+        mins.textContent = pad(m);
+        secs.textContent = pad(s);
+      }
+
+      tick();
+      setInterval(tick, 1000);
+    })();
+  </script>
 
 </body>
+
 </html>
