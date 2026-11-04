@@ -570,6 +570,60 @@
             margin-bottom: 6px
         }
 
+        .cash-code-field {
+            margin-top: 18px
+        }
+
+        .cash-code-field label {
+            font-size: .88rem;
+            font-weight: 800;
+            color: rgba(255, 255, 255, .9);
+            margin-bottom: 8px;
+            display: block
+        }
+
+        .cash-code-field input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, .25);
+            background: rgba(255, 255, 255, .15);
+            color: #fff;
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            outline: none;
+            transition: border-color .15s, background .15s
+        }
+
+        .cash-code-field input::placeholder {
+            color: rgba(255, 255, 255, .4);
+            font-weight: 400;
+            letter-spacing: 0
+        }
+
+        .cash-code-field input:focus {
+            border-color: rgba(255, 255, 255, .7);
+            background: rgba(255, 255, 255, .22)
+        }
+
+        .cash-code-field input.code-ok {
+            border-color: #4ade80;
+            background: rgba(74, 222, 128, .15)
+        }
+
+        .cash-code-field input.code-err {
+            border-color: #ff6b6b;
+            background: rgba(255, 107, 107, .15)
+        }
+
+        .cash-code-hint {
+            margin-top: 6px;
+            font-size: .78rem;
+            color: rgba(255, 255, 255, .6)
+        }
+
         .submit-area {
             text-align: center;
             padding: 8px 0 60px
@@ -894,6 +948,12 @@
                     <strong>💵 Pay ₹149 at the venue</strong>
                     <p>Bring exact change on the day of the event. Your spot will be held — just show up and pay at the
                         registration desk at MJCET.</p>
+                    <div class="cash-code-field">
+                        <label for="cash-code">Payment Verification Code <span class="req">*</span></label>
+                        <input type="text" id="cash-code" name="cash-code" autocomplete="off" maxlength="10"
+                            spellcheck="false">
+                        <p class="cash-code-hint">Enter the code given to you after paying at the venue</p>
+                    </div>
                 </div>
             </div>
 
@@ -982,6 +1042,13 @@
             if (college === 'other' && !other) { alert('Please enter your college name.'); $('other-college').focus(); return; }
             if (!roll) { alert('Please enter your roll number.'); $('roll').focus(); return; }
             if (paymentMethod === 'UPI' && !/^\d{12}$/.test(utr)) { alert('Please enter the 12-digit UPI transaction ID.'); $('utr').focus(); return; }
+            var cashCode = v('cash-code').toUpperCase();
+            if (paymentMethod === 'Cash') {
+                if (!cashCode) { alert('Please enter the payment verification code.'); $('cash-code').focus(); return; }
+                if (cashCode !== 'LACE123') { $('cash-code').classList.add('code-err'); alert('Invalid verification code. Please check and try again.'); $('cash-code').focus(); return; }
+                $('cash-code').classList.remove('code-err');
+                $('cash-code').classList.add('code-ok');
+            }
 
             btn.disabled = true;
             btn.textContent = 'Submitting…';
@@ -1014,6 +1081,11 @@
                 $('payment-card').style.display = 'none';
                 $('submit-area').style.display = 'none';
                 observer.disconnect();
+                // Hide WhatsApp link for cash payers who haven't verified code
+                if (paymentMethod === 'Cash' && cashCode !== 'LACE123') {
+                    $('whatsapp-link').style.display = 'none';
+                    document.querySelector('.wa-note').style.display = 'none';
+                }
                 var s = $('success-card');
                 s.style.display = 'block';
                 s.scrollIntoView({ behavior: 'smooth', block: 'center' });
