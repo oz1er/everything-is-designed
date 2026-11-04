@@ -425,6 +425,77 @@
             text-align: center
         }
 
+        .payment-method-toggle {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 1
+        }
+
+        .pm-option {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, .12);
+            border: 2px solid rgba(255, 255, 255, .2);
+            border-radius: 14px;
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: background .15s, border-color .15s;
+            user-select: none
+        }
+
+        .pm-option.selected {
+            background: rgba(255, 255, 255, .25);
+            border-color: rgba(255, 255, 255, .7)
+        }
+
+        .pm-option input[type=radio] {
+            display: none
+        }
+
+        .pm-radio-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2.5px solid rgba(255, 255, 255, .6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: none;
+            transition: border-color .15s
+        }
+
+        .pm-option.selected .pm-radio-dot {
+            border-color: #fff
+        }
+
+        .pm-radio-dot::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fff;
+            display: none
+        }
+
+        .pm-option.selected .pm-radio-dot::after {
+            display: block
+        }
+
+        .pm-label strong {
+            display: block;
+            font-size: .95rem;
+            font-weight: 800
+        }
+
+        .pm-label span {
+            font-size: .78rem;
+            opacity: .75
+        }
+
         .payment-steps {
             display: grid;
             gap: 14px;
@@ -475,6 +546,28 @@
 
         .utr-field .hint {
             color: rgba(255, 255, 255, .75)
+        }
+
+        .cash-info {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, .12);
+            border-radius: 14px;
+            padding: 20px 22px;
+            margin-bottom: 0;
+            display: none
+        }
+
+        .cash-info p {
+            font-size: .95rem;
+            opacity: .9;
+            margin-top: 0
+        }
+
+        .cash-info strong {
+            display: block;
+            font-size: 1.05rem;
+            margin-bottom: 6px
         }
 
         .submit-area {
@@ -737,14 +830,31 @@
             <!-- PAYMENT -->
             <div class="payment-card" id="payment-card">
                 <div class="section-label mono">02 · PAYMENT</div>
-                <div class="payment-top">
-                    <div class="price-info">
-                        <div class="og">₹299</div>
-                        <h2>₹149</h2>
-                        <div class="badge-eb mono">EARLY BIRD</div>
-                        <p>One-time · Includes tea + snacks</p>
 
-                        <div style="margin-top:24px">
+                <!-- Payment Method Toggle -->
+                <div class="payment-method-toggle">
+                    <label class="pm-option selected" id="pm-upi-label">
+                        <input type="radio" name="paymentMethod" id="pm-upi" value="UPI" checked>
+                        <div class="pm-radio-dot"></div>
+                        <div class="pm-label">
+                            <strong>UPI / QR</strong>
+                            <span>GPay, PhonePe, Paytm</span>
+                        </div>
+                    </label>
+                    <label class="pm-option" id="pm-cash-label">
+                        <input type="radio" name="paymentMethod" id="pm-cash" value="Cash">
+                        <div class="pm-radio-dot"></div>
+                        <div class="pm-label">
+                            <strong>Cash</strong>
+                            <span>Pay at the venue</span>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- UPI Section -->
+                <div id="upi-section">
+                    <div class="payment-top">
+                        <div>
                             <div class="payment-steps">
                                 <div class="p-step">
                                     <div class="p-num">1</div>
@@ -766,21 +876,28 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="qr-wrap">
+                            <div class="qr-box" id="qr-placeholder">
+                                <img src="paymentqr.jpeg" alt="Payment QR code">
+                            </div>
+                            <div class="qr-label mono">SCAN TO PAY · ₹149</div>
+                        </div>
                     </div>
 
-                    <div class="qr-wrap">
-                        <div class="qr-box" id="qr-placeholder">
-                            <img src="paymentqr.jpeg" alt="Payment QR code">
-                        </div>
-                        <div class="qr-label mono">SCAN TO PAY · ₹149</div>
+                    <div class="field utr-field" id="utr-field">
+                        <label for="utr">UPI Transaction ID <span class="req">*</span></label>
+                        <input type="text" id="utr" name="utr" placeholder="12-digit UTR from your payment app"
+                            inputmode="numeric" maxlength="12" autocomplete="off">
+                        <p class="hint">Find it in your payment app under transaction details</p>
                     </div>
                 </div>
 
-                <div class="field utr-field">
-                    <label for="utr">UPI Transaction ID <span class="req">*</span></label>
-                    <input type="text" id="utr" name="utr" placeholder="12-digit UTR from your payment app"
-                        inputmode="numeric" maxlength="12" autocomplete="off" required>
-                    <p class="hint">Find it in your payment app under transaction details</p>
+                <!-- Cash Section -->
+                <div class="cash-info" id="cash-section">
+                    <strong>💵 Pay ₹149 at the venue</strong>
+                    <p>Bring exact change on the day of the event. Your spot will be held — just show up and pay at the
+                        registration desk at MJCET.</p>
                 </div>
             </div>
 
@@ -834,6 +951,25 @@
             document.getElementById(id).className = 'step-pill active';
         }
 
+        // Payment method toggle
+        var pmUpi = document.getElementById('pm-upi');
+        var pmCash = document.getElementById('pm-cash');
+        var pmUpiLabel = document.getElementById('pm-upi-label');
+        var pmCashLabel = document.getElementById('pm-cash-label');
+        var upiSection = document.getElementById('upi-section');
+        var cashSection = document.getElementById('cash-section');
+
+        function updatePaymentMethod() {
+            var isUpi = pmUpi.checked;
+            pmUpiLabel.classList.toggle('selected', isUpi);
+            pmCashLabel.classList.toggle('selected', !isUpi);
+            upiSection.style.display = isUpi ? '' : 'none';
+            cashSection.style.display = isUpi ? 'none' : 'block';
+        }
+
+        pmUpiLabel.addEventListener('click', function () { pmUpi.checked = true; updatePaymentMethod(); });
+        pmCashLabel.addEventListener('click', function () { pmCash.checked = true; updatePaymentMethod(); });
+
         // Submit to Google Sheets
         document.getElementById('submit-btn').addEventListener('click', async function () {
             var btn = this;
@@ -841,6 +977,7 @@
             var v = function (id) { return $(id).value.trim(); };
             var name = v('name'), phone = v('phone'), email = v('email'),
                 college = v('college'), roll = v('roll'), other = v('other-college'), utr = v('utr');
+            var paymentMethod = pmCash.checked ? 'Cash' : 'UPI';
 
             if (!name) { alert('Please enter your full name.'); $('name').focus(); return; }
             if (!/^\d{10}$/.test(phone)) { alert('Please enter a valid 10-digit phone number.'); $('phone').focus(); return; }
@@ -848,7 +985,7 @@
             if (!college) { alert('Please select your college.'); $('college').focus(); return; }
             if (college === 'other' && !other) { alert('Please enter your college name.'); $('other-college').focus(); return; }
             if (!roll) { alert('Please enter your roll number.'); $('roll').focus(); return; }
-            if (!/^\d{12}$/.test(utr)) { alert('Please enter the 12-digit UPI transaction ID.'); $('utr').focus(); return; }
+            if (paymentMethod === 'UPI' && !/^\d{12}$/.test(utr)) { alert('Please enter the 12-digit UPI transaction ID.'); $('utr').focus(); return; }
 
             btn.disabled = true;
             btn.textContent = 'Submitting…';
@@ -858,6 +995,7 @@
                     name: name, phone: phone, email: email,
                     college: college === 'other' ? 'Other' : 'MJCET',
                     'other-college': other, roll: roll, utr: utr,
+                    paymentMethod: paymentMethod,
                     website: v('website')
                 });
                 var res = await fetch(SCRIPT_URL, { method: 'POST', body: body });
