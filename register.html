@@ -784,21 +784,19 @@
 
                 <div class="field">
                     <label for="name">Full Name <span class="req">*</span></label>
-                    <input type="text" id="name" name="name" placeholder="e.g. Aisha Siddiqui" autocomplete="name"
-                        required>
+                    <input type="text" id="name" name="name" autocomplete="name" required>
                 </div>
 
                 <div class="field">
                     <label for="phone">Phone Number <span class="req">*</span></label>
-                    <input type="tel" id="phone" name="phone" placeholder="e.g. 9876543210" autocomplete="tel"
-                        maxlength="10" pattern="[0-9]{10}" inputmode="numeric" required>
+                    <input type="tel" id="phone" name="phone" autocomplete="tel" maxlength="10" pattern="[0-9]{10}"
+                        inputmode="numeric" required>
                     <p class="hint">10-digit mobile number, no spaces</p>
                 </div>
 
                 <div class="field">
                     <label for="email">Email Address <span class="req">*</span></label>
-                    <input type="text" id="email" name="email" placeholder="e.g. aisha@example.com" autocomplete="email"
-                        inputmode="email" required>
+                    <input type="text" id="email" name="email" autocomplete="email" inputmode="email" required>
                     <p class="hint">We'll send event updates to this address</p>
                 </div>
 
@@ -812,14 +810,13 @@
                         </select>
                     </div>
                     <div id="other-college-field">
-                        <input type="text" id="other-college" name="other-college"
-                            placeholder="Enter your college name">
+                        <input type="text" id="other-college" name="other-college">
                     </div>
                 </div>
 
                 <div class="field">
                     <label for="roll">Roll Number <span class="req">*</span></label>
-                    <input type="text" id="roll" name="roll" placeholder="e.g. 23BD1A0501" autocomplete="off" required>
+                    <input type="text" id="roll" name="roll" autocomplete="off" required>
                     <p class="hint">Enter your official college roll number</p>
                     <!-- honeypot: real users never see or fill this -->
                     <input type="text" name="website" id="website" style="display:none" tabindex="-1"
@@ -887,8 +884,7 @@
 
                     <div class="field utr-field" id="utr-field">
                         <label for="utr">UPI Transaction ID <span class="req">*</span></label>
-                        <input type="text" id="utr" name="utr" placeholder="12-digit UTR from your payment app"
-                            inputmode="numeric" maxlength="12" autocomplete="off">
+                        <input type="text" id="utr" name="utr" inputmode="numeric" maxlength="12" autocomplete="off">
                         <p class="hint">Find it in your payment app under transaction details</p>
                     </div>
                 </div>
