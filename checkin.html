@@ -99,6 +99,11 @@
             font-size: 15px;
         }
 
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .start {
             background: #2f5bea;
             color: white;
@@ -116,6 +121,7 @@
             background: #f1f5f9;
             display: none;
             overflow-wrap: anywhere;
+            white-space: pre-line;
         }
 
         .result h3 {
@@ -146,6 +152,12 @@
             margin-top: 18px;
             text-align: center;
         }
+
+        @media(max-width: 400px) {
+            .stat h3 {
+                font-size: 20px;
+            }
+        }
     </style>
 </head>
 
@@ -159,6 +171,7 @@
         </header>
 
         <section class="stats">
+
             <div class="stat">
                 <h3>—</h3>
                 <p>REGISTERED</p>
@@ -173,6 +186,7 @@
                 <h3>—</h3>
                 <p>PENDING</p>
             </div>
+
         </section>
 
         <section class="scanner-card">
@@ -190,20 +204,23 @@
             </button>
 
             <div class="result" id="result">
+
                 <h3 id="resultTitle">QR Detected</h3>
+
                 <p id="resultText"></p>
+
             </div>
 
             <div class="manual">
+
                 <h3>Manual Token Entry</h3>
 
-                <input type="text" id="manualToken" placeholder="Enter QR token">
+                <input type="text" id="manualToken" placeholder="Enter QR token" autocomplete="off">
 
-                <button onclick="processToken(
-        document.getElementById('manualToken').value
-      )">
-                    Read Token
+                <button id="manualBtn">
+                    Verify Registration
                 </button>
+
             </div>
 
         </section>
@@ -216,98 +233,396 @@
 
     <script>
 
+        // ==========================================
+        // CONFIGURATION
+        // ==========================================
+
+        const APPS_SCRIPT_URL =
+            'YOUR_APPS_SCRIPT_WEB_APP_URL';
+
+
+        // ==========================================
+        // SCANNER VARIABLES
+        // ==========================================
+
         let scanner = null;
         let scanning = false;
+        let processing = false;
+        let organiserPin = '';
 
         const result = document.getElementById('result');
         const resultTitle = document.getElementById('resultTitle');
         const resultText = document.getElementById('resultText');
 
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const manualBtn = document.getElementById('manualBtn');
+
+
+        // ==========================================
+        // RESULT DISPLAY
+        // ==========================================
+
+        function showResult(title, message, status = '') {
+
+            result.style.display = 'block';
+
+            resultTitle.textContent = title;
+            resultText.textContent = message;
+
+            result.style.background =
+                status === 'success' ? '#dcfce7' :
+                    status === 'error' ? '#fee2e2' :
+                        '#f1f5f9';
+        }
+
+
+        // ==========================================
+        // PROCESS QR TOKEN
+        // ==========================================
+
         function processToken(token) {
 
             token = token.trim();
 
-            if (!token) {
-                alert('Please enter a valid token.');
+            if (processing) return;
+
+            // Validate QR token format
+            if (!/^[a-f0-9]{64}$/i.test(token)) {
+
+                showResult(
+                    'INVALID QR',
+                    'This QR code does not contain a valid registration token.',
+                    'error'
+                );
+
                 return;
             }
 
-            if (!/^[a-f0-9]{64}$/i.test(token)) {
+            // Ask for organiser PIN
+            if (!organiserPin) {
+
+                organiserPin = prompt('Enter organiser PIN:') || '';
+
+            }
+
+            if (!organiserPin) {
+
                 showResult(
-                    'INVALID QR FORMAT',
-                    'This QR code does not contain a valid registration token.'
+                    'ACCESS REQUIRED',
+                    'Organiser PIN is required.',
+                    'error'
                 );
+
                 return;
             }
+
+            verifyToken(token);
+
+        }
+
+
+        // ==========================================
+        // CONNECT TO GOOGLE APPS SCRIPT
+        // ==========================================
+
+        function verifyToken(token) {
+
+            processing = true;
+
+            startBtn.disabled = true;
+            manualBtn.disabled = true;
 
             showResult(
-                'QR DETECTED',
-                'Token captured successfully. Server verification will be connected in Step 4.'
+                'VERIFYING...',
+                'Checking participant registration.'
             );
 
-            console.log('Scanned token:', token);
+            // Remove previous API script
+            const oldScript =
+                document.getElementById('checkin-api');
 
-            document.getElementById('manualToken').value = token;
+            if (oldScript) oldScript.remove();
+
+            const script = document.createElement('script');
+
+            script.id = 'checkin-api';
+
+            let completed = false;
+
+            const timeout = setTimeout(function () {
+
+                if (completed) return;
+
+                completed = true;
+
+                finishRequest();
+
+                script.remove();
+
+                showResult(
+                    'CONNECTION ERROR',
+                    'The server did not respond. Please try again.',
+                    'error'
+                );
+
+            }, 15000);
+
+
+            // Response callback
+            window.handleCheckinResponse = function (data) {
+
+                if (completed) return;
+
+                completed = true;
+
+                clearTimeout(timeout);
+
+                finishRequest();
+
+                // Incorrect PIN
+                if (data.status === 'unauthorized') {
+
+                    organiserPin = '';
+
+                    showResult(
+                        'ACCESS DENIED',
+                        'Incorrect organiser PIN.',
+                        'error'
+                    );
+
+                    return;
+                }
+
+                // Successful entry
+                if (data.status === 'success') {
+
+                    showResult(
+                        'ENTRY SUCCESSFUL ✓',
+                        'Participant: ' + data.name +
+                        '\nRegistration ID: ' + data.registrationId +
+                        '\nEntry time: ' +
+                        new Date(data.entryTime).toLocaleTimeString(),
+                        'success'
+                    );
+
+                    return;
+                }
+
+                // Duplicate entry
+                if (data.status === 'already_checked_in') {
+
+                    showResult(
+                        'ALREADY CHECKED IN',
+                        data.name + ' has already entered.',
+                        'error'
+                    );
+
+                    return;
+                }
+
+                // Registration not found
+                if (data.status === 'not_found') {
+
+                    showResult(
+                        'REGISTRATION NOT FOUND',
+                        'This QR code does not belong to a registered participant.',
+                        'error'
+                    );
+
+                    return;
+                }
+
+                // Invalid QR
+                if (data.status === 'invalid_qr') {
+
+                    showResult(
+                        'INVALID QR',
+                        'The QR token is invalid.',
+                        'error'
+                    );
+
+                    return;
+                }
+
+                // Other errors
+                showResult(
+                    'SERVER ERROR',
+                    'Something went wrong. Contact the administrator.',
+                    'error'
+                );
+
+            };
+
+
+            // Build request URL
+            const params = new URLSearchParams({
+
+                token: token,
+
+                pin: organiserPin,
+
+                callback: 'handleCheckinResponse'
+
+            });
+
+            script.src =
+                APPS_SCRIPT_URL + '?' + params.toString();
+
+
+            // Connection error
+            script.onerror = function () {
+
+                if (completed) return;
+
+                completed = true;
+
+                clearTimeout(timeout);
+
+                finishRequest();
+
+                showResult(
+                    'CONNECTION ERROR',
+                    'Could not connect to Google Apps Script.',
+                    'error'
+                );
+
+            };
+
+            document.body.appendChild(script);
+
         }
 
-        function showResult(title, message) {
-            result.style.display = 'block';
-            resultTitle.textContent = title;
-            resultText.textContent = message;
+
+        // ==========================================
+        // FINISH API REQUEST
+        // ==========================================
+
+        function finishRequest() {
+
+            processing = false;
+
+            startBtn.disabled = false;
+            manualBtn.disabled = false;
+
         }
 
-        document.getElementById('startBtn').addEventListener(
-            'click',
-            async function () {
 
-                if (scanning) return;
+        // ==========================================
+        // START CAMERA SCANNER
+        // ==========================================
+
+        startBtn.addEventListener('click', async function () {
+
+            if (scanning || processing) return;
+
+            try {
+
+                if (!scanner) {
+
+                    scanner = new Html5Qrcode('reader');
+
+                }
+
+                await scanner.start(
+
+                    { facingMode: 'environment' },
+
+                    {
+                        fps: 10,
+                        qrbox: {
+                            width: 250,
+                            height: 250
+                        }
+                    },
+
+                    async function (decodedText) {
+
+                        if (!scanning || processing) return;
+
+                        scanning = false;
+
+                        await scanner.stop();
+
+                        processToken(decodedText);
+
+                    },
+
+                    function () { }
+
+                );
+
+                scanning = true;
+
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+
+            } catch (error) {
+
+                alert(
+                    'Camera unavailable. Check camera permissions and HTTPS.'
+                );
+
+                console.error(error);
+
+            }
+
+        });
+
+
+        // ==========================================
+        // STOP CAMERA SCANNER
+        // ==========================================
+
+        stopBtn.addEventListener('click', async function () {
+
+            if (scanner && scanning) {
+
+                scanning = false;
 
                 try {
 
-                    if (!scanner) {
-                        scanner = new Html5Qrcode('reader');
-                    }
-
-                    await scanner.start(
-                        { facingMode: 'environment' },
-                        {
-                            fps: 10,
-                            qrbox: { width: 250, height: 250 }
-                        },
-                        function (decodedText) {
-
-                            if (!scanning) return;
-
-                            scanning = false;
-
-                            processToken(decodedText);
-
-                            scanner.stop().catch(console.error);
-
-                        },
-                        function () { }
-                    );
-
-                    scanning = true;
+                    await scanner.stop();
 
                 } catch (error) {
-                    alert('Camera unavailable. Allow camera permissions and try again.');
+
                     console.error(error);
-                }
-            }
-        );
 
-        document.getElementById('stopBtn').addEventListener(
-            'click',
-            async function () {
-
-                if (scanner && scanning) {
-                    scanning = false;
-                    await scanner.stop();
                 }
 
+                startBtn.disabled = false;
+
             }
-        );
+
+        });
+
+
+        // ==========================================
+        // MANUAL TOKEN ENTRY
+        // ==========================================
+
+        manualBtn.addEventListener('click', function () {
+
+            const token =
+                document.getElementById('manualToken').value;
+
+            processToken(token);
+
+        });
+
+
+        // Enter key support
+        document.getElementById('manualToken')
+            .addEventListener('keydown', function (event) {
+
+                if (event.key === 'Enter') {
+
+                    processToken(this.value);
+
+                }
+
+            });
+
 
     </script>
 
