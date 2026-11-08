@@ -606,3 +606,85 @@ function doGet(e) {
     .createTextOutput(callback + '(' + JSON.stringify(result) + ');')
     .setMimeType(ContentService.MimeType.JAVASCRIPT);
 }
+
+
+/**
+ * Send the registration email to everyone whose Email_Status (column N)
+ * is not "SENT". Safe to run repeatedly: it only retries blank/FAILED/PENDING rows.
+ * Run dryRunPendingEmails() first to see who would receive an email.
+ */
+function sendPendingEmails() {
+  processPendingEmails_(false);
+}
+
+function dryRunPendingEmails() {
+  processPendingEmails_(true);
+}
+
+function processPendingEmails_(dryRun) {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+    var lastRow = sheet.getLastRow();
+
+    if (lastRow < 2) {
+      Logger.log('No registrations found.');
+      return;
+    }
+
+    // Columns A..N (14 columns)
+    var rows = sheet.getRange(2, 1, lastRow - 1, 14).getValues();
+    var sent = 0, failed = 0, skipped = 0, pending = 0;
+
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      var rowNum = i + 2;
+      var name = String(r[1]).trim();
+      var email = String(r[3]).trim();
+      var status = String(r[13]).trim().toUpperCase();
+
+      if (!email || status === 'SENT') { skipped++; continue; }
+      pending++;
+
+      if (dryRun) {
+        Logger.log('Would send to row ' + rowNum + ': ' + name + ' <' + email + '>');
+        continue;
+      }
+
+      // Stop before exceeding the daily email quota
+      if (MailApp.getRemainingDailyQuota() < 1) {
+        Logger.log('Email quota exhausted. Run again tomorrow to continue.');
+        break;
+      }
+
+      try {
+        // Ensure the registration has an ID and QR token
+        var regId = String(r[10]).trim();
+        var token = String(r[11]).trim();
+
+        if (!regId) { regId = generateRegistrationId(); sheet.getRange(rowNum, 11).setValue(regId); }
+        if (!token) { token = generateQRToken(); sheet.getRange(rowNum, 12).setValue(token); }
+        if (!String(r[12]).trim()) { sheet.getRange(rowNum, 13).setValue('NO'); }
+
+        sendRegistrationEmail(name, email, regId, token);
+        sheet.getRange(rowNum, 14).setValue('SENT');
+        sent++;
+      } catch (err) {
+        sheet.getRange(rowNum, 14).setValue('FAILED');
+        console.error('Row ' + rowNum + ' (' + email + '): ' + err.message);
+        failed++;
+      }
+
+      SpreadsheetApp.flush();
+      Utilities.sleep(300);
+    }
+
+    Logger.log((dryRun ? '[DRY RUN] ' : '') + 'Pending: ' + pending +
+      ' | Sent: ' + sent + ' | Failed: ' + failed + ' | Skipped: ' + skipped +
+      ' | Quota left: ' + MailApp.getRemainingDailyQuota());
+  } finally {
+    lock.releaseLock();
+  }
+}
