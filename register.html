@@ -946,9 +946,11 @@
                 <!-- Cash Section -->
                 <div class="cash-info" id="cash-section">
                     <strong>💵 Pay ₹299 to a team member</strong>
-                    <p>Submit your details to receive a unique cash payment code by email. Show that code to an event
-                        collector when you pay. Your entry QR code will be emailed after the collector confirms your
-                        payment.</p>
+                    <p>After paying, enter the verification code provided by the team member.</p>
+                    <div class="cash-code-field">
+                        <label for="verification-code">Verification code <span class="req">*</span></label>
+                        <input type="text" id="verification-code" name="verificationCode" autocomplete="off">
+                    </div>
                 </div>
             </div>
 
@@ -1029,7 +1031,8 @@
             var $ = function (id) { return document.getElementById(id); };
             var v = function (id) { return $(id).value.trim(); };
             var name = v('name'), phone = v('phone'), email = v('email'),
-                college = v('college'), roll = v('roll'), other = v('other-college'), utr = v('utr');
+                college = v('college'), roll = v('roll'), other = v('other-college'),
+                utr = v('utr'), verificationCode = v('verification-code');
             var paymentMethod = pmCash.checked ? 'Cash' : 'UPI';
 
             if (!name) { alert('Please enter your full name.'); $('name').focus(); return; }
@@ -1039,6 +1042,7 @@
             if (college === 'other' && !other) { alert('Please enter your college name.'); $('other-college').focus(); return; }
             if (!roll) { alert('Please enter your roll number.'); $('roll').focus(); return; }
             if (paymentMethod === 'UPI' && !/^\d{12}$/.test(utr)) { alert('Please enter the 12-digit UPI transaction ID.'); $('utr').focus(); return; }
+            if (paymentMethod === 'Cash' && !verificationCode) { alert('Please enter the verification code from the team member.'); $('verification-code').focus(); return; }
 
             btn.disabled = true;
             btn.textContent = 'Submitting…';
@@ -1049,6 +1053,7 @@
                     college: college === 'other' ? 'Other' : 'MJCET',
                     'other-college': other, roll: roll, utr: utr,
                     paymentMethod: paymentMethod,
+                    verificationCode: verificationCode,
                     website: v('website')
                 });
                 var res = await fetch(SCRIPT_URL, { method: 'POST', body: body });
@@ -1061,6 +1066,7 @@
                         duplicate_utr: 'This transaction ID has already been used.',
                         duplicate_phone: 'This phone number is already registered.',
                         invalid_utr: 'Enter a valid 12-digit UPI transaction ID.',
+                        invalid_verification_code: 'Enter the verification code provided by a team member.',
                         invalid: 'Some details look wrong. Please check and try again.'
                     };
                     alert(msgs[out.error] || 'Something went wrong. Please try again.');
@@ -1078,9 +1084,7 @@
                 var extra = '';
                 if (out.registrationId) extra += 'Registration ID: ' + out.registrationId + '\n';
                 if (paymentMethod === 'Cash') {
-                    extra += out.cashCode
-                        ? 'Your cash payment code: ' + out.cashCode + '\nShow this to an event collector when paying.'
-                        : 'Your unique cash payment code will be sent by email.';
+                    extra += 'Your cash payment is awaiting verification by the team.';
                     $('whatsapp-link').style.display = 'none';
                     document.querySelector('.wa-note').style.display = 'none';
                 } else {
