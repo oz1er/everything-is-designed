@@ -915,7 +915,7 @@
                                 </div>
                                 <div class="p-step">
                                     <div class="p-num">2</div>
-                                    <div><strong>Pay ₹149</strong>
+                                    <div><strong>Pay ₹299</strong>
                                         <p>Add your name in the payment note</p>
                                     </div>
                                 </div>
@@ -932,7 +932,7 @@
                             <div class="qr-box" id="qr-placeholder">
                                 <img src="paymentqr.jpeg" alt="Payment QR code">
                             </div>
-                            <div class="qr-label mono">SCAN TO PAY · ₹149</div>
+                            <div class="qr-label mono">SCAN TO PAY · ₹299</div>
                         </div>
                     </div>
 
@@ -945,13 +945,10 @@
 
                 <!-- Cash Section -->
                 <div class="cash-info" id="cash-section">
-                    <strong>💵 Pay ₹149 to a team member</strong>
-                    <div class="cash-code-field">
-                        <label for="cash-code">Payment Verification Code <span class="req">*</span></label>
-                        <input type="password" id="cash-code" name="cash-code" autocomplete="off" maxlength="10"
-                            spellcheck="false" oninput="this.value=this.value.toUpperCase()">
-                        <p class="cash-code-hint">Enter the code given to you by the team member</p>
-                    </div>
+                    <strong>💵 Pay ₹299 to a team member</strong>
+                    <p>Submit your details to receive a unique cash payment code by email. Show that code to an event
+                        collector when you pay. Your entry QR code will be emailed after the collector confirms your
+                        payment.</p>
                 </div>
             </div>
 
@@ -967,6 +964,7 @@
                 <h2>You're registered!</h2>
                 <p>See you on <strong>Thu, 12 Nov</strong> at <strong>10 AM</strong> at <strong>MJCET</strong>.<br>Carry
                     your college ID to the venue.</p>
+                <p id="success-extra" style="font-size:.95rem;white-space:pre-line"></p>
                 <a class="wa-btn" id="whatsapp-link"
                     href="https://chat.whatsapp.com/CbDSPrixFdcH0l1hJX1q7g?s=sw&p=a&mlu=0" target="_blank"
                     rel="noopener">
@@ -1041,13 +1039,6 @@
             if (college === 'other' && !other) { alert('Please enter your college name.'); $('other-college').focus(); return; }
             if (!roll) { alert('Please enter your roll number.'); $('roll').focus(); return; }
             if (paymentMethod === 'UPI' && !/^\d{12}$/.test(utr)) { alert('Please enter the 12-digit UPI transaction ID.'); $('utr').focus(); return; }
-            var cashCode = v('cash-code').toUpperCase();
-            if (paymentMethod === 'Cash') {
-                if (!cashCode) { alert('Please enter the payment verification code.'); $('cash-code').focus(); return; }
-                if (cashCode !== 'LACE123') { $('cash-code').classList.add('code-err'); alert('Invalid verification code. Please check and try again.'); $('cash-code').focus(); return; }
-                $('cash-code').classList.remove('code-err');
-                $('cash-code').classList.add('code-ok');
-            }
 
             btn.disabled = true;
             btn.textContent = 'Submitting…';
@@ -1068,6 +1059,8 @@
                         full: 'Sorry, all seats are taken.',
                         duplicate_email: 'This email is already registered.',
                         duplicate_utr: 'This transaction ID has already been used.',
+                        duplicate_phone: 'This phone number is already registered.',
+                        invalid_utr: 'Enter a valid 12-digit UPI transaction ID.',
                         invalid: 'Some details look wrong. Please check and try again.'
                     };
                     alert(msgs[out.error] || 'Something went wrong. Please try again.');
@@ -1080,11 +1073,21 @@
                 $('payment-card').style.display = 'none';
                 $('submit-area').style.display = 'none';
                 observer.disconnect();
-                // Hide WhatsApp link for cash payers who haven't verified code
-                if (paymentMethod === 'Cash' && cashCode !== 'LACE123') {
+                // Show the correct payment state. Cash registrations receive a
+                // unique code by email; their entry QR is sent only after collection.
+                var extra = '';
+                if (out.registrationId) extra += 'Registration ID: ' + out.registrationId + '\n';
+                if (paymentMethod === 'Cash') {
+                    extra += out.cashCode
+                        ? 'Your cash payment code: ' + out.cashCode + '\nShow this to an event collector when paying.'
+                        : 'Your unique cash payment code will be sent by email.';
                     $('whatsapp-link').style.display = 'none';
                     document.querySelector('.wa-note').style.display = 'none';
+                } else {
+                    extra += 'Payment status: awaiting verification. Your entry QR will be emailed once payment is verified.';
                 }
+                if (out.emailSent === false) extra += '\nWe could not send the email automatically. Please contact the organisers.';
+                $('success-extra').textContent = extra;
                 var s = $('success-card');
                 s.style.display = 'block';
                 s.scrollIntoView({ behavior: 'smooth', block: 'center' });

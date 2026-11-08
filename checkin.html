@@ -232,397 +232,213 @@
     </div>
 
     <script>
-
-        // ==========================================
-        // CONFIGURATION
-        // ==========================================
-
-        const APPS_SCRIPT_URL =
-            'https://script.google.com/macros/s/AKfycbys6l1jzrI4Jw5mWzuZXlaGlZ1bOYP0SQQnJniZxihazhOFZj-xRfF6dk9ZUg-5TquxNQ/exec'
-
-        // ==========================================
-        // SCANNER VARIABLES
-        // ==========================================
-
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbys6l1jzrI4Jw5mWzuZXlaGlZ1bOYP0SQQnJniZxihazhOFZj-xRfF6dk9ZUg-5TquxNQ/exec';
         let scanner = null;
         let scanning = false;
         let processing = false;
         let organiserPin = '';
+        let autoResume = true;
+        let statsTimer = null;
 
         const result = document.getElementById('result');
         const resultTitle = document.getElementById('resultTitle');
         const resultText = document.getElementById('resultText');
-
         const startBtn = document.getElementById('startBtn');
         const stopBtn = document.getElementById('stopBtn');
         const manualBtn = document.getElementById('manualBtn');
-
-
-        // ==========================================
-        // RESULT DISPLAY
-        // ==========================================
+        const statValues = document.querySelectorAll('.stats .stat h3');
 
         function showResult(title, message, status = '') {
-
             result.style.display = 'block';
-
             resultTitle.textContent = title;
             resultText.textContent = message;
-
-            result.style.background =
-                status === 'success' ? '#dcfce7' :
-                    status === 'error' ? '#fee2e2' :
-                        '#f1f5f9';
+            result.style.background = status === 'success' ? '#dcfce7' :
+                status === 'error' ? '#fee2e2' : '#f1f5f9';
         }
 
-
-        // ==========================================
-        // PROCESS QR TOKEN
-        // ==========================================
-
-        function processToken(token) {
-
-            token = token.trim();
-
-            if (processing) return;
-
-            // Validate QR token format
-            if (!/^[a-f0-9]{64}$/i.test(token)) {
-
-                showResult(
-                    'INVALID QR',
-                    'This QR code does not contain a valid registration token.',
-                    'error'
-                );
-
-                return;
-            }
-
-            // Ask for organiser PIN
-            if (!organiserPin) {
-
-                organiserPin = prompt('Enter organiser PIN:') || '';
-
-            }
-
-            if (!organiserPin) {
-
-                showResult(
-                    'ACCESS REQUIRED',
-                    'Organiser PIN is required.',
-                    'error'
-                );
-
-                return;
-            }
-
-            verifyToken(token);
-
+        function ensurePin() {
+            if (organiserPin) return true;
+            organiserPin = (prompt('Enter organiser PIN:') || '').trim();
+            return !!organiserPin;
         }
 
-
-        // ==========================================
-        // CONNECT TO GOOGLE APPS SCRIPT
-        // ==========================================
-
-        function verifyToken(token) {
-
-            processing = true;
-
-            startBtn.disabled = true;
-            manualBtn.disabled = true;
-
-            showResult(
-                'VERIFYING...',
-                'Checking participant registration.'
-            );
-
-            // Remove previous API script
-            const oldScript =
-                document.getElementById('checkin-api');
-
-            if (oldScript) oldScript.remove();
-
+        function jsonpRequest(params, onSuccess, onFailure) {
+            const callbackName = 'eventApiCallback_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
             const script = document.createElement('script');
-
-            script.id = 'checkin-api';
-
-            let completed = false;
-
-            const timeout = setTimeout(function () {
-
-                if (completed) return;
-
-                completed = true;
-
-                finishRequest();
-
+            let finished = false;
+            const cleanup = () => {
+                if (finished) return;
+                finished = true;
+                clearTimeout(timeout);
+                delete window[callbackName];
                 script.remove();
-
-                showResult(
-                    'CONNECTION ERROR',
-                    'The server did not respond. Please try again.',
-                    'error'
-                );
-
+            };
+            const timeout = setTimeout(() => {
+                cleanup();
+                onFailure(new Error('Request timed out'));
             }, 15000);
 
-
-            // Response callback
-            window.handleCheckinResponse = function (data) {
-
-                if (completed) return;
-
-                completed = true;
-
-                clearTimeout(timeout);
-
-                finishRequest();
-
-                // Incorrect PIN
-                if (data.status === 'unauthorized') {
-
-                    organiserPin = '';
-
-                    showResult(
-                        'ACCESS DENIED',
-                        'Incorrect organiser PIN.',
-                        'error'
-                    );
-
-                    return;
-                }
-
-                // Successful entry
-                if (data.status === 'success') {
-
-                    showResult(
-                        'ENTRY SUCCESSFUL ✓',
-                        'Participant: ' + data.name +
-                        '\nRegistration ID: ' + data.registrationId +
-                        '\nEntry time: ' +
-                        new Date(data.entryTime).toLocaleTimeString(),
-                        'success'
-                    );
-
-                    return;
-                }
-
-                // Duplicate entry
-                if (data.status === 'already_checked_in') {
-
-                    showResult(
-                        'ALREADY CHECKED IN',
-                        data.name + ' has already entered.',
-                        'error'
-                    );
-
-                    return;
-                }
-
-                // Registration not found
-                if (data.status === 'not_found') {
-
-                    showResult(
-                        'REGISTRATION NOT FOUND',
-                        'This QR code does not belong to a registered participant.',
-                        'error'
-                    );
-
-                    return;
-                }
-
-                // Invalid QR
-                if (data.status === 'invalid_qr') {
-
-                    showResult(
-                        'INVALID QR',
-                        'The QR token is invalid.',
-                        'error'
-                    );
-
-                    return;
-                }
-
-                // Other errors
-                showResult(
-                    'SERVER ERROR',
-                    'Something went wrong. Contact the administrator.',
-                    'error'
-                );
-
+            window[callbackName] = data => {
+                if (finished) return;
+                cleanup();
+                onSuccess(data);
             };
-
-
-            // Build request URL
-            const params = new URLSearchParams({
-
-                token: token,
-
-                pin: organiserPin,
-
-                callback: 'handleCheckinResponse'
-
-            });
-
-            script.src =
-                APPS_SCRIPT_URL + '?' + params.toString();
-
-
-            // Connection error
-            script.onerror = function () {
-
-                if (completed) return;
-
-                completed = true;
-
-                clearTimeout(timeout);
-
-                finishRequest();
-
-                showResult(
-                    'CONNECTION ERROR',
-                    'Could not connect to Google Apps Script.',
-                    'error'
-                );
-
+            const query = new URLSearchParams({ ...params, callback: callbackName });
+            script.src = APPS_SCRIPT_URL + '?' + query.toString();
+            script.onerror = () => {
+                if (finished) return;
+                cleanup();
+                onFailure(new Error('Could not load Apps Script response'));
             };
-
             document.body.appendChild(script);
-
         }
 
-
-        // ==========================================
-        // FINISH API REQUEST
-        // ==========================================
+        function loadStats() {
+            if (!ensurePin()) return;
+            jsonpRequest({ action: 'stats', pin: organiserPin }, data => {
+                if (data.status === 'unauthorized') {
+                    organiserPin = '';
+                    if (statsTimer) clearInterval(statsTimer);
+                    showResult('ACCESS DENIED', 'Enter the correct organiser PIN to load dashboard statistics.', 'error');
+                    return;
+                }
+                if (!data.ok) return;
+                statValues[0].textContent = data.registered;
+                statValues[1].textContent = data.checkedIn;
+                statValues[2].textContent = data.pending;
+            }, () => {
+                // Keep the dashboard usable if a background stats refresh fails.
+            });
+        }
 
         function finishRequest() {
-
             processing = false;
-
             startBtn.disabled = false;
             manualBtn.disabled = false;
-
+            if (autoResume) setTimeout(startScanner, 1600);
         }
 
+        function handleCheckinResult(data) {
+            if (data.status === 'unauthorized') {
+                organiserPin = '';
+                autoResume = false;
+                showResult('ACCESS DENIED', 'Incorrect organiser PIN. Start scanning again and re-enter it.', 'error');
+                return;
+            }
+            if (data.status === 'success') {
+                showResult('ENTRY SUCCESSFUL ✓', 'Participant: ' + data.name +
+                    '\nRegistration ID: ' + data.registrationId +
+                    '\nEntry time: ' + new Date(data.entryTime).toLocaleTimeString(), 'success');
+                loadStats();
+                return;
+            }
+            if (data.status === 'already_checked_in') {
+                showResult('ALREADY CHECKED IN', data.name + ' has already entered.', 'error');
+                loadStats();
+                return;
+            }
+            if (data.status === 'not_paid') {
+                showResult('PAYMENT NOT VERIFIED', (data.name || 'This participant') + ' is not cleared for entry yet.', 'error');
+                return;
+            }
+            if (data.status === 'not_found') {
+                showResult('REGISTRATION NOT FOUND', 'This QR code does not belong to a registered participant.', 'error');
+                return;
+            }
+            if (data.status === 'invalid_qr') {
+                showResult('INVALID QR', 'The QR token is invalid.', 'error');
+                return;
+            }
+            showResult('SERVER ERROR', 'Something went wrong. Contact the administrator.', 'error');
+        }
 
-        // ==========================================
-        // START CAMERA SCANNER
-        // ==========================================
+        function verifyToken(token) {
+            processing = true;
+            startBtn.disabled = true;
+            manualBtn.disabled = true;
+            showResult('VERIFYING...', 'Checking participant registration.');
+            jsonpRequest({ token: token, pin: organiserPin }, data => {
+                handleCheckinResult(data);
+                finishRequest();
+            }, () => {
+                showResult('CONNECTION ERROR', 'Could not connect to Google Apps Script. Check deployment and internet connection.', 'error');
+                finishRequest();
+            });
+        }
 
-        startBtn.addEventListener('click', async function () {
+        function processToken(rawToken) {
+            const token = String(rawToken || '').trim();
+            if (processing) return;
+            if (!/^[a-f0-9]{64}$/i.test(token)) {
+                showResult('INVALID QR', 'This QR code does not contain a valid registration token.', 'error');
+                return;
+            }
+            if (!ensurePin()) {
+                autoResume = false;
+                showResult('ACCESS REQUIRED', 'Organiser PIN is required.', 'error');
+                return;
+            }
+            autoResume = true;
+            verifyToken(token);
+        }
 
+        async function startScanner() {
             if (scanning || processing) return;
-
             try {
-
-                if (!scanner) {
-
-                    scanner = new Html5Qrcode('reader');
-
-                }
-
+                if (!scanner) scanner = new Html5Qrcode('reader');
                 await scanner.start(
-
                     { facingMode: 'environment' },
-
-                    {
-                        fps: 10,
-                        qrbox: {
-                            width: 250,
-                            height: 250
-                        }
-                    },
-
-                    async function (decodedText) {
-
+                    { fps: 10, qrbox: { width: 250, height: 250 } },
+                    async decodedText => {
                         if (!scanning || processing) return;
-
                         scanning = false;
-
-                        await scanner.stop();
-
+                        try { await scanner.stop(); } catch (err) { console.error(err); }
                         processToken(decodedText);
-
                     },
-
-                    function () { }
-
+                    () => { }
                 );
-
                 scanning = true;
-
                 startBtn.disabled = true;
                 stopBtn.disabled = false;
-
             } catch (error) {
-
-                alert(
-                    'Camera unavailable. Check camera permissions and HTTPS.'
-                );
-
-                console.error(error);
-
-            }
-
-        });
-
-
-        // ==========================================
-        // STOP CAMERA SCANNER
-        // ==========================================
-
-        stopBtn.addEventListener('click', async function () {
-
-            if (scanner && scanning) {
-
                 scanning = false;
-
-                try {
-
-                    await scanner.stop();
-
-                } catch (error) {
-
-                    console.error(error);
-
-                }
-
                 startBtn.disabled = false;
-
+                alert('Camera unavailable. Check camera permissions and HTTPS.');
+                console.error(error);
             }
+        }
 
+        startBtn.addEventListener('click', () => {
+            autoResume = true;
+            startScanner();
         });
 
-
-        // ==========================================
-        // MANUAL TOKEN ENTRY
-        // ==========================================
-
-        manualBtn.addEventListener('click', function () {
-
-            const token =
-                document.getElementById('manualToken').value;
-
-            processToken(token);
-
+        stopBtn.addEventListener('click', async () => {
+            autoResume = false;
+            if (scanner && scanning) {
+                scanning = false;
+                try { await scanner.stop(); } catch (error) { console.error(error); }
+            }
+            startBtn.disabled = false;
         });
 
+        manualBtn.addEventListener('click', () => {
+            autoResume = false;
+            processToken(document.getElementById('manualToken').value);
+            autoResume = false;
+        });
 
-        // Enter key support
-        document.getElementById('manualToken')
-            .addEventListener('keydown', function (event) {
+        document.getElementById('manualToken').addEventListener('keydown', event => {
+            if (event.key === 'Enter') {
+                autoResume = false;
+                processToken(event.currentTarget.value);
+                autoResume = false;
+            }
+        });
 
-                if (event.key === 'Enter') {
-
-                    processToken(this.value);
-
-                }
-
-            });
-
-
+        // Load protected aggregate statistics and refresh them periodically.
+        loadStats();
+        statsTimer = setInterval(loadStats, 20000);
     </script>
 
 </body>
