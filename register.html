@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -921,8 +921,8 @@
                                 </div>
                                 <div class="p-step">
                                     <div class="p-num">3</div>
-                                    <div><strong>Enter your transaction ID</strong>
-                                        <p>Copy the 12-digit UTR below, then confirm</p>
+                                    <div><strong>Enter your UPI Transaction ID / UTR</strong>
+                                        <p>Copy the 12-digit UPI Transaction ID / UTR below, then confirm</p>
                                     </div>
                                 </div>
                             </div>
@@ -937,7 +937,7 @@
                     </div>
 
                     <div class="field utr-field" id="utr-field">
-                        <label for="utr">UPI Transaction ID <span class="req">*</span></label>
+                        <label for="utr">UPI Transaction ID / UTR <span class="req">*</span></label>
                         <input type="text" id="utr" name="utr" inputmode="numeric" maxlength="12" autocomplete="off">
                         <p class="hint">Find it in your payment app under transaction details</p>
                     </div>
@@ -1041,7 +1041,7 @@
             if (!college) { alert('Please select your college.'); $('college').focus(); return; }
             if (college === 'other' && !other) { alert('Please enter your college name.'); $('other-college').focus(); return; }
             if (!roll) { alert('Please enter your roll number.'); $('roll').focus(); return; }
-            if (paymentMethod === 'UPI' && !/^\d{12}$/.test(utr)) { alert('Please enter the 12-digit UPI transaction ID.'); $('utr').focus(); return; }
+            if (paymentMethod === 'UPI' && !/^\d{12}$/.test(utr)) { alert('Please enter the 12-digit UPI Transaction ID / UTR.'); $('utr').focus(); return; }
             if (paymentMethod === 'Cash' && verificationCode.toUpperCase() !== 'LACE123') { alert(verificationCode ? 'Invalid verification code. Please check and try again.' : 'Please enter the payment verification code.'); $('verification-code').focus(); return; }
 
             btn.disabled = true;
@@ -1063,9 +1063,9 @@
                     var msgs = {
                         full: 'Sorry, all seats are taken.',
                         duplicate_email: 'This email is already registered.',
-                        duplicate_utr: 'This transaction ID has already been used.',
+                        duplicate_utr: 'This UPI Transaction ID / UTR has already been used.',
                         duplicate_phone: 'This phone number is already registered.',
-                        invalid_utr: 'Enter a valid 12-digit UPI transaction ID.',
+                        invalid_utr: 'Enter a valid 12-digit UPI Transaction ID / UTR.',
                         invalid_verification_code: 'Enter the verification code provided by a team member.',
                         invalid: 'Some details look wrong. Please check and try again.'
                     };
